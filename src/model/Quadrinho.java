@@ -26,7 +26,10 @@ public class Quadrinho extends Object implements Entity {
     public Quadrinho() {
     }
 
-    public Quadrinho(int id, Colecao colecao, String nome, double valor, String editora, String ISBN, boolean versaoFisica, boolean versaoDigital, String edicao, String genero, boolean disponibilidade, String curiosidade, double nota, boolean recomendavel) {
+    public Quadrinho(int id, Colecao colecao, String nome, double valor, String editora,
+            String ISBN, boolean versaoFisica, boolean versaoDigital, String edicao,
+            String genero, boolean disponibilidade, String curiosidade, double nota, boolean recomendavel
+    ) {
         this.id = id;
         this.colecao = colecao;
         this.nome = nome;
@@ -43,8 +46,12 @@ public class Quadrinho extends Object implements Entity {
         this.recomendavel = recomendavel;
     }
 
-    public Quadrinho(Colecao colecao, String nome, double valor, String editora, String ISBN, boolean versaoFisica, boolean versaoDigital, String edicao, String genero, boolean disponibilidade, String curiosidade, double nota, boolean recomendavel) {
-        this(0, colecao, nome, valor, editora, ISBN, versaoFisica, versaoDigital, edicao, genero, disponibilidade, curiosidade, nota, recomendavel);
+    public Quadrinho(Colecao colecao, String nome, double valor, String editora,
+            String ISBN, boolean versaoFisica, boolean versaoDigital, String edicao,
+            String genero, boolean disponibilidade, String curiosidade, double nota, boolean recomendavel
+    ) {
+        this(0, colecao, nome, valor, editora, ISBN, versaoFisica, versaoDigital, edicao, genero,
+                disponibilidade, curiosidade, nota, recomendavel);
     }
 
     public Colecao getColecao() {

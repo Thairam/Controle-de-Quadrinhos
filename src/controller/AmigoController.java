@@ -131,7 +131,7 @@ public class AmigoController {
         if (!email.matches(AmigoER.ER_EMAIL)) {
             AmigoController.camposInvalidos.add("email");
         }
-        
+
         return AmigoController.camposInvalidos.isEmpty();
     }
 
