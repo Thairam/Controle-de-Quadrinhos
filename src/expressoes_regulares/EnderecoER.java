@@ -1,10 +1,10 @@
-package validadores;
+package expressoes_regulares;
 
 /**
  *
  * @author Thairam Michel
  */
-public class EnderecoValidador {
+public class EnderecoER {
 
     public static final String ER_RUA = "^((\\b[a-zA-ZÀ-ú']{1,40}\\b)\\s*){1,}$";
     public static final String ER_BAIRRO = "^((\\b[a-zA-ZÀ-ú']{1,40}\\b)\\s*){1,}$";

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import model.Endereco;
 import model.Amigo;
 import model.Utils;
-import validadores.AmigoValidador;
+import expressoes_regulares.AmigoER;
 
 /**
  * @author Thairam Michel
@@ -17,10 +17,6 @@ public class AmigoController {
 
     Dao<Amigo> dao = new AmigoDao<>();
     private static ArrayList<String> camposInvalidos = new ArrayList<>();
-
-    public AmigoController() {
-        camposInvalidos = new ArrayList<>();
-    }
 
     public HashMap<Boolean, Object> salvarAluno(Endereco endereco, String nome, String dataNasc, String cpf, String fone, String email) {
 
@@ -118,23 +114,68 @@ public class AmigoController {
 
     private static boolean verificarCampos(String nome, String dataNasc, String cpf, String fone, String email) {
 
-        if (!nome.matches(AmigoValidador.ER_NOME)) {
+        AmigoController.camposInvalidos = new ArrayList<>();
+
+        if (!nome.matches(AmigoER.ER_NOME)) {
             AmigoController.camposInvalidos.add("nome");
         }
-        if (!dataNasc.matches(AmigoValidador.ER_DATA_NASCIMENTO)) {
+        if (!dataNasc.matches(AmigoER.ER_DATA_NASCIMENTO)) {
             AmigoController.camposInvalidos.add("data de nascimento");
         }
-        if (!cpf.matches(AmigoValidador.ER_CPF)) {
+        if (!cpf.matches(AmigoER.ER_CPF)) {
             AmigoController.camposInvalidos.add("cpf");
         }
-        if (!fone.matches(AmigoValidador.ER_FONE)) {
+        if (!fone.matches(AmigoER.ER_FONE)) {
             AmigoController.camposInvalidos.add("telefone");
         }
-        if (!email.matches(AmigoValidador.ER_EMAIL)) {
+        if (!email.matches(AmigoER.ER_EMAIL)) {
             AmigoController.camposInvalidos.add("email");
         }
 
         return AmigoController.camposInvalidos.isEmpty();
+    }
+
+    public static boolean verificarCamposAtualizacao(String nome, String dataNasc, String cpf, String fone, String email) {
+
+        AmigoController.camposInvalidos = new ArrayList<>();
+
+        if (!nome.matches(AmigoER.ER_NOME) && !"".equals(nome)) {
+            AmigoController.camposInvalidos.add("nome");
+        }
+        if (!dataNasc.matches(AmigoER.ER_DATA_NASCIMENTO) && !"".equals(dataNasc)) {
+            AmigoController.camposInvalidos.add("data de nascimento");
+        }
+        if (!cpf.matches(AmigoER.ER_CPF) && !"".equals(cpf)) {
+            AmigoController.camposInvalidos.add("cpf");
+        }
+        if (!fone.matches(AmigoER.ER_FONE) && !"".equals(fone)) {
+            AmigoController.camposInvalidos.add("telefone");
+        }
+        if (!email.matches(AmigoER.ER_EMAIL) && !"".equals(email)) {
+            AmigoController.camposInvalidos.add("email");
+        }
+
+        return AmigoController.camposInvalidos.isEmpty();
+    }
+
+    public boolean nomeValidador(String nome) {
+        return nome.matches(AmigoER.ER_NOME);
+    }
+
+    public boolean dataNascimentoValidador(String data) {
+        return data.matches(AmigoER.ER_DATA_NASCIMENTO);
+    }
+
+    public boolean cpfValidador(String cpf) {
+        return cpf.matches(AmigoER.ER_CPF);
+    }
+
+    public boolean foneValidador(String fone) {
+        return fone.matches(AmigoER.ER_FONE);
+    }
+
+    public boolean emailValidador(String email) {
+        return email.matches(AmigoER.ER_EMAIL);
     }
 
     private static boolean verificarAmigo(Amigo amigo) {

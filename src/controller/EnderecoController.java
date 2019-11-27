@@ -6,7 +6,7 @@ import dao.EnderecoDao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import model.Utils;
-import validadores.EnderecoValidador;
+import expressoes_regulares.EnderecoER;
 
 /**
  *
@@ -32,7 +32,7 @@ public class EnderecoController {
                 return resposta;
             } catch (Exception e) {
                 if (e.getMessage().contains("Duplicate")) {
-                    resposta.put(Boolean.FALSE, "Já existe um registro para este endereço");
+                    resposta.put(Boolean.FALSE, "Já existe um registro para este endereço!");
                 }
                 return resposta;
             }
@@ -52,7 +52,7 @@ public class EnderecoController {
         ArrayList<Endereco> lista = new ArrayList<>();
 
         try {
-            lista = dao.query("SELECT * FROM ENDEREC");
+            lista = dao.query("SELECT * FROM ENDERECO");
         } catch (Exception e) {
             return lista;
         }
@@ -83,20 +83,23 @@ public class EnderecoController {
     }
 
     private static boolean verificarCampos(String rua, String bairro, String cidade, String uf, int cep) {
-        if (!rua.matches(EnderecoValidador.ER_RUA)) {
+
+        EnderecoController.camposInvalidos = new ArrayList<>();
+
+        if (!rua.matches(EnderecoER.ER_RUA)) {
             EnderecoController.camposInvalidos.add("rua");
         }
-        if (!bairro.matches(EnderecoValidador.ER_BAIRRO)) {
+        if (!bairro.matches(EnderecoER.ER_BAIRRO)) {
             EnderecoController.camposInvalidos.add("bairro");
         }
-        if (!cidade.matches(EnderecoValidador.ER_CIDADE)) {
+        if (!cidade.matches(EnderecoER.ER_CIDADE)) {
             EnderecoController.camposInvalidos.add("cidade");
         }
-        if (!uf.matches(EnderecoValidador.ER_UF)) {
+        if (!uf.matches(EnderecoER.ER_UF)) {
             EnderecoController.camposInvalidos.add("uf");
         }
         String cepS = Integer.toString(cep);
-        if (!cepS.matches(EnderecoValidador.ER_CEP)) {
+        if (!cepS.matches(EnderecoER.ER_CEP)) {
             EnderecoController.camposInvalidos.add("cep");
         }
 

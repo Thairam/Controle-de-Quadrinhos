@@ -1,10 +1,10 @@
-package validadores;
+package expressoes_regulares;
 
 /**
  *
  * @author Thairam Michel
  */
-public class AmigoValidador {
+public class AmigoER {
 
 //    public static final String ER_NOME = "[a-zA-Z]{3,}|[a-zA-Z]{3,}\\s[a-zA-Z]{3,}|[a-zA-Z]{3,}\\s[a-zA-Z]{3,}\\s[a-zA-Z]{3,}|[a-zA-Z]{3,}\\s[a-zA-Z]{3,}\\s[a-zA-Z]{3,}\\s[a-zA-Z]{3,}\\s[a-zA-Z]{3,}";
     public static final String ER_NOME = "^((\\b[a-zA-ZÀ-ú']{3,40}\\b)\\s*){1,}$";
