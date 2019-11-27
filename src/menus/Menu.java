@@ -14,17 +14,17 @@ public class Menu {
 
     public static void menuPrincipal() {
         System.out.println("***** MENU PRINCIPAL *****");
-        System.out.println("1: Amigos\n2: Quadrinhos\n3: Empréstimo\n4: Coleções\n5: Endereços\n0: finalizar");
+        System.out.println("1: Amigos\n2: Quadrinhos\n3: Empréstimo\n4: Coleções\n5: Endereços\n0: finalizar\n");
     }
 
     public static void menuPrincipalAmigos() {
         System.out.println("****** MENU AMIGO ******");
-        System.out.println("1: Adicionar amigo\n2: Atualizar amigo\n3: Listar amigos\n4: Buscar amigo por cpf\n0: Voltar");
+        System.out.println("1: Adicionar amigo\n2: Atualizar amigo\n3: Listar amigos\n4: Buscar amigo por cpf\n0: Voltar\n");
     }
 
     public static void menuPrincipalEnderecos() {
         System.out.println("****** MENU ENDEREÇO ******");
-        System.out.println("1: Adicionar endereço\n2: Atualizar endereço\n3: Listar endereços\n0: Voltar");
+        System.out.println("1: Adicionar endereço\n2: Atualizar endereço\n3: Listar endereços\n4: Excluir endereço\n0: Voltar\n");
     }
 
     public static void apresentarListaEnderecos(ArrayList<Endereco> enderecos, String msg1, String msg2) {
@@ -35,7 +35,7 @@ public class Menu {
             for (int i = 0; i < enderecos.size(); i++) {
                 System.out.println((i + 1) + ":" + enderecos.get(i).getCidade() + " - "
                         + enderecos.get(i).getRua() + " - " + enderecos.get(i).getBairro() + " - "
-                        + enderecos.get(i).getCep() + " - " + enderecos.get(i).getUf());
+                        + enderecos.get(i).getCep() + " - " + enderecos.get(i).getUf() + "\n");
             }
             System.out.println(msg2);
         }
@@ -49,7 +49,7 @@ public class Menu {
             for (Amigo amigo : amigos) {
                 System.out.println("Nome: " + amigo.getNome() + " || Cpf: " + amigo.getCpf()
                         + " || Data de Nascimento: " + Utils.calendToString(amigo.getDataNascimento())
-                        + " || Email: " + amigo.getEmail());
+                        + " || Email: " + amigo.getEmail() + "\n");
             }
             System.out.println("");
         }
@@ -64,6 +64,13 @@ public class Menu {
         } else {
             System.out.println(resultAmigo.get(false) + "\n");
         }
+    }
+
+    public static void apresentarEndereco(Endereco endereco, String msg) {
+        System.out.println(msg);
+        System.out.println(endereco.getCidade() + " - "
+                + endereco.getRua() + " - " + endereco.getBairro() + " - "
+                + endereco.getCep() + " - " + endereco.getUf() + "\n");
     }
 
 }

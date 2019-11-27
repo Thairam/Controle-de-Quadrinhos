@@ -14,7 +14,7 @@ import interfaces.Entity;
 public class Endereco implements Entity {
 
     private int id;
-    private int cep;
+    private String cep;
     private String rua;
     private String bairro;
     private String cidade;
@@ -23,7 +23,7 @@ public class Endereco implements Entity {
     public Endereco() {
     }
 
-    public Endereco(int id, int cep, String rua, String bairro, String cidade, String uf) {
+    public Endereco(int id, String cep, String rua, String bairro, String cidade, String uf) {
         this.id = id;
         this.cep = cep;
         this.rua = rua;
@@ -40,7 +40,7 @@ public class Endereco implements Entity {
         this.cidade = cidade;
     }
 
-    public Endereco(int cep, String rua, String bairro, String cidade, String uf) {
+    public Endereco(String cep, String rua, String bairro, String cidade, String uf) {
         this(0, cep, rua, bairro, cidade, uf);
     }
 
@@ -52,11 +52,11 @@ public class Endereco implements Entity {
         this.id = id;
     }
 
-    public int getCep() {
+    public String getCep() {
         return cep;
     }
 
-    public void setCep(int cep) {
+    public void setCep(String cep) {
         this.cep = cep;
     }
 
@@ -91,7 +91,8 @@ public class Endereco implements Entity {
 
     @Override
     public String getValues() {
-        return cep + ", " + Utils.quotedStr(rua) + ", " + Utils.quotedStr(bairro) + ", " + Utils.quotedStr(cidade) + ", " + Utils.quotedStr(uf);
+        return Utils.quotedStr(cep) + ", " + Utils.quotedStr(rua) + ", "
+                + Utils.quotedStr(bairro) + ", " + Utils.quotedStr(cidade) + ", " + Utils.quotedStr(uf);
     }
 
     @Override

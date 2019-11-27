@@ -131,7 +131,7 @@ public class AmigoController {
         if (!email.matches(AmigoER.ER_EMAIL)) {
             AmigoController.camposInvalidos.add("email");
         }
-
+        
         return AmigoController.camposInvalidos.isEmpty();
     }
 
@@ -184,6 +184,7 @@ public class AmigoController {
         String cpf = amigo.getCpf();
         String fone = amigo.getFone();
         String email = amigo.getEmail();
+
         return verificarCampos(nome, data, cpf, fone, email);
     }
 

@@ -21,7 +21,7 @@ public class EnderecoController {
         camposInvalidos = new ArrayList<>();
     }
 
-    public HashMap<Boolean, Object> salvarEndereco(String rua, String bairro, String cidade, String UF, int cep) {
+    public HashMap<Boolean, Object> salvarEndereco(String rua, String bairro, String cidade, String UF, String cep) {
         HashMap<Boolean, Object> resposta = new HashMap<Boolean, Object>();
 
         if (verificarCampos(rua, bairro, cidade, UF, cep)) {
@@ -82,7 +82,16 @@ public class EnderecoController {
         return resposta;
     }
 
-    private static boolean verificarCampos(String rua, String bairro, String cidade, String uf, int cep) {
+    public boolean deletarEndereco(Endereco endereco) {
+        try {
+            dao.delete(endereco);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static boolean verificarCampos(String rua, String bairro, String cidade, String uf, String cep) {
 
         EnderecoController.camposInvalidos = new ArrayList<>();
 
@@ -98,8 +107,30 @@ public class EnderecoController {
         if (!uf.matches(EnderecoER.ER_UF)) {
             EnderecoController.camposInvalidos.add("uf");
         }
-        String cepS = Integer.toString(cep);
-        if (!cepS.matches(EnderecoER.ER_CEP)) {
+        if (!cep.matches(EnderecoER.ER_CEP)) {
+            EnderecoController.camposInvalidos.add("cep");
+        }
+
+        return EnderecoController.camposInvalidos.isEmpty();
+    }
+
+    public static boolean verificarCamposAtualizacao(String rua, String bairro, String cidade, String uf, String cep) {
+
+        EnderecoController.camposInvalidos = new ArrayList<>();
+
+        if (!rua.matches(EnderecoER.ER_RUA) && !"".equals(rua)) {
+            EnderecoController.camposInvalidos.add("rua");
+        }
+        if (!bairro.matches(EnderecoER.ER_BAIRRO) && !"".equals(bairro)) {
+            EnderecoController.camposInvalidos.add("bairro");
+        }
+        if (!cidade.matches(EnderecoER.ER_CIDADE) && !"".equals(cidade)) {
+            EnderecoController.camposInvalidos.add("cidade");
+        }
+        if (!uf.matches(EnderecoER.ER_UF) && !"".equals(uf)) {
+            EnderecoController.camposInvalidos.add("uf");
+        }
+        if (!cep.matches(EnderecoER.ER_CEP) && !"".equals(cep)) {
             EnderecoController.camposInvalidos.add("cep");
         }
 
@@ -111,7 +142,7 @@ public class EnderecoController {
         String bairro = endereco.getBairro();
         String cidade = endereco.getCidade();
         String uf = endereco.getUf();
-        int cep = endereco.getCep();
+        String cep = endereco.getCep();
 
         return verificarCampos(rua, bairro, cidade, uf, cep);
     }

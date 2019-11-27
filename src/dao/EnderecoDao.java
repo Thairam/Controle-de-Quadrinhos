@@ -23,7 +23,7 @@ public class EnderecoDao extends Dao {
     protected Object getObject(ResultSet resultSet) throws SQLException {
         return new Endereco(
                 rs.getInt("id"),
-                rs.getInt("cep"),
+                rs.getString("cep"),
                 rs.getString("rua"),
                 rs.getString("bairro"),
                 rs.getString("cidade"),

@@ -28,6 +28,7 @@ public class Principal {
             do {
                 Menu.menuPrincipal();
                 try {
+                    System.out.print("Digite uma das opções: ");
                     opcao = Integer.parseInt(sc.nextLine());
                 } catch (NumberFormatException e) {
                 }
@@ -48,6 +49,7 @@ public class Principal {
                         do {
                             Menu.menuPrincipalAmigos();
                             try {
+                                System.out.print("Digite uma das opções: ");
                                 opcao = Integer.parseInt(sc.nextLine());
                             } catch (NumberFormatException e) {
                                 System.out.println("Digite uma opção válida!");
@@ -100,6 +102,7 @@ public class Principal {
                                             ? "Amigo cadastrado com sucesso" : resultAmigo.get(false));
                                     break;
                                 case 2:
+                                    // Atualizar amigo
                                     System.out.println("Informe o cpf do amigo(111.111.111-00): ");
                                     cpf = sc.nextLine();
                                     resultAmigo = amigoControl.buscarAmigoPorCpf(cpf);
@@ -118,6 +121,12 @@ public class Principal {
                                         System.out.println("Informe o novo cpf(111.111.111-00): ");
                                         cpf = sc.nextLine();
 
+                                        System.out.println("Informe o novo telefone(083 98765-4321): ");
+                                        fone = sc.nextLine();
+
+                                        System.out.println("Informe o novo email(example@gmail.com): ");
+                                        email = sc.nextLine();
+
                                         opEndereco = 0;
                                         mensagem1 = "Escolha um dos endereços: ";
                                         mensagem2 = "Caso não deseje modificar o endereço digite 0!";
@@ -129,12 +138,6 @@ public class Principal {
                                                 System.out.println("Digite uma opção válida!");
                                             }
                                         } while (opEndereco < 0 || opEndereco > enderecos.size());
-
-                                        System.out.println("Informe o novo telefone(083 98765-4321): ");
-                                        fone = sc.nextLine();
-
-                                        System.out.println("Informe o novo email(example@gmail.com): ");
-                                        email = sc.nextLine();
 
                                         boolean camposValidos = amigoControl
                                                 .verificarCamposAtualizacao(nome, dataNascimento, cpf, fone, email);
@@ -159,11 +162,12 @@ public class Principal {
                                                 amigo.setEndereco(enderecos.get(opEndereco - 1));
                                             }
 
-                                            HashMap<Boolean, String> resultAtualizacaoAmigo = amigoControl.atualizarAmigo(amigo);
+                                            HashMap<Boolean, String> resultAtualizacaoAmigo = amigoControl
+                                                    .atualizarAmigo(amigo);
 
                                             System.out.println(resultAtualizacaoAmigo.containsKey(true)
                                                     ? "Amigo atualizado com sucesso"
-                                                    : "Já existe um registro com o mesmo cpf!\n");
+                                                    : "ERRO!");
                                         } else {
                                             System.out.println("Dados inválidos!");
                                         }
@@ -196,7 +200,9 @@ public class Principal {
                     // Coleções
                     break;
                 case 5:
+                    // Endereços
                     while (opcao != 0) {
+                        enderecos = enderecoControl.listarTodosOsEnderecos();
 
                         do {
                             Menu.menuPrincipalEnderecos();
@@ -205,7 +211,7 @@ public class Principal {
                             } catch (NumberFormatException e) {
                                 System.out.println("Digite uma opção válida!");
                             }
-                        } while (opcao < 0 || opcao > 3);
+                        } while (opcao < 0 || opcao > 4);
 
                         switch (opcao) {
                             case 0:
@@ -224,10 +230,10 @@ public class Principal {
                                 System.out.println("Informe o estado(UF): ");
                                 String uf = sc.nextLine();
 
-                                System.out.println("Informe o cep(123456000): ");
+                                System.out.println("Informe o cep(58110223): ");
                                 String cep = sc.nextLine();
 
-                                resultEndereco = enderecoControl.salvarEndereco(rua, bairro, cidade, uf, );
+                                resultEndereco = enderecoControl.salvarEndereco(rua, bairro, cidade, uf, cep);
 
                                 System.out.println(resultEndereco.containsKey(true)
                                         ? "Endereço cadastrado com sucesso" : resultEndereco.get(false));
@@ -235,15 +241,109 @@ public class Principal {
                                 break;
                             case 2:
                                 // Atualizar endereço
+
+                                int opEndereco = 0;
+
+                                String mensagem1 = "Informe o endereço a ser atualizado: ";
+                                String mensagem2 = "Digite 0 para cancelar!";
+                                do {
+                                    Menu.apresentarListaEnderecos(enderecos, mensagem1, mensagem2);
+                                    try {
+                                        opEndereco = Integer.parseInt(sc.nextLine());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Digite uma opção válida!");
+                                    }
+                                } while (opEndereco < 0 || opEndereco > enderecos.size());
+
+                                if (opEndereco == 0) {
+                                    break;
+                                }
+
+                                Endereco endereco = enderecos.get(opEndereco - 1);
+                                mensagem1 = "*** Endereço que será utilizado ***";
+                                Menu.apresentarEndereco(endereco, mensagem1);
+
+                                System.out.println("Atenção: caso não pretenda atualizar um determinado campo, apenas aperte a tecla enter!");
+
+                                System.out.println("Informe o novo nome da rua: ");
+                                rua = sc.nextLine();
+
+                                System.out.println("Informe o novo bairro: ");
+                                bairro = sc.nextLine();
+
+                                System.out.println("Informe a nova cidade: ");
+                                cidade = sc.nextLine();
+
+                                System.out.println("Informe o novo estado(UF): ");
+                                uf = sc.nextLine();
+
+                                System.out.println("Informe o novo cep(58110223): ");
+                                cep = sc.nextLine();
+
+                                boolean camposValidos = enderecoControl
+                                        .verificarCamposAtualizacao(rua, bairro, cidade, uf, cep);
+
+                                if (camposValidos) {
+                                    if (!"".equals(rua)) {
+                                        endereco.setRua(rua);
+                                    }
+                                    if (!"".equals(bairro)) {
+                                        endereco.setBairro(bairro);
+                                    }
+                                    if (!"".equals(cidade)) {
+                                        endereco.setCidade(cidade);
+                                    }
+                                    if (!"".equals(uf)) {
+                                        endereco.setUf(uf);
+                                    }
+                                    if (!"".equals(cep)) {
+                                        endereco.setCep(cep);
+                                    }
+
+                                    HashMap<Boolean, Object> resultAtualizacaoEndereco
+                                            = enderecoControl.atualizarEndereco(endereco);
+
+                                    System.out.println(resultAtualizacaoEndereco.containsKey(true)
+                                            ? "Endereço atualizado com sucesso\n"
+                                            : "Já existe um registro com o mesmo cep!\n");
+                                } else {
+                                    System.out.println("Dados inválidos!\n");
+                                }
+
                                 break;
+
                             case 3:
                                 // Listar endereços
-                                enderecos = enderecoControl.listarTodosOsEnderecos();
                                 Menu.apresentarListaEnderecos(enderecos, "", "");
+                                break;
+                            case 4:
+                                // Excluir endereço
+                                mensagem1 = "Informe o endereço a ser deletado: ";
+                                mensagem2 = "Digite 0 para cancelar!";
+                                opEndereco = 0;
+                                do {
+                                    Menu.apresentarListaEnderecos(enderecos, mensagem1, mensagem2);
+                                    try {
+                                        opEndereco = Integer.parseInt(sc.nextLine());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Digite uma opção válida!");
+                                    }
+                                } while (opEndereco < 0 || opEndereco > enderecos.size());
+
+                                if (opEndereco == 0) {
+                                    break;
+                                }
+
+                                boolean result = enderecoControl.deletarEndereco(enderecos.get(opEndereco - 1));
+
+                                System.out.println(result
+                                        ? "Endereço deletado com sucesso!" : "Falha na operação!");
+
+                                break;
+
                         }
 
                     }
-                    // Endereços
                     break;
             }
         }
