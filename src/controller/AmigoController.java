@@ -18,7 +18,7 @@ public class AmigoController {
     Dao<Amigo> dao = new AmigoDao<>();
     private static ArrayList<String> camposInvalidos = new ArrayList<>();
 
-    public HashMap<Boolean, Object> salvarAluno(Endereco endereco, String nome, String dataNasc, String cpf, String fone, String email) {
+    public HashMap<Boolean, Object> salvarAmigo(Endereco endereco, String nome, String dataNasc, String cpf, String fone, String email) {
 
         HashMap<Boolean, Object> resposta = new HashMap<Boolean, Object>();
 
@@ -131,7 +131,7 @@ public class AmigoController {
         if (!email.matches(AmigoER.ER_EMAIL)) {
             AmigoController.camposInvalidos.add("email");
         }
-        
+
         return AmigoController.camposInvalidos.isEmpty();
     }
 
