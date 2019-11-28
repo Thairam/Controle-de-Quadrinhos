@@ -98,7 +98,7 @@ public class Principal {
                                     }
 
                                     Endereco endereco = enderecos.get(opEndereco - 1);
-                                    resultAmigo = amigoControl.salvarAluno(endereco, nome, dataNascimento, cpf, fone, email);
+                                    resultAmigo = amigoControl.salvarAmigo(endereco, nome, dataNascimento, cpf, fone, email);
 
                                     System.out.println(resultAmigo.containsKey(true)
                                             ? "Amigo cadastrado com sucesso" : resultAmigo.get(false));
