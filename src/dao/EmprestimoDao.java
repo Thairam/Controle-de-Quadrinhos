@@ -45,7 +45,7 @@ public class EmprestimoDao<T> extends Dao<T> {
         //add para corrigir erro de atraso em um dia na data
         emprestimo.add(Calendar.DAY_OF_MONTH, 1);
         devolucao.add(Calendar.DAY_OF_MONTH, 1);
-
+        
         return ((T) new Emprestimo(resultSet.getInt("id"),
                 amigo,
                 emprestimo,

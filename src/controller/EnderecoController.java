@@ -32,16 +32,15 @@ public class EnderecoController {
                 return resposta;
             } catch (Exception e) {
                 if (e.getMessage().contains("Duplicate")) {
-                    resposta.put(Boolean.FALSE, "Já existe um registro para este endereço!");
+                    resposta.put(Boolean.FALSE, "Já existe um registro com o mesmo cep, para este endereço!");
+                } else {
+                    resposta.put(Boolean.FALSE, "Erro ao salvar o endereço, por favor tente novamente!");
+
                 }
                 return resposta;
             }
         } else {
-            String msgCampos = "Campos com valores inválidos: \n";
-            for (int i = 0; i < camposInvalidos.size(); i++) {
-                msgCampos += (i + 1) + ": " + camposInvalidos.get(i) + "\n";
-            }
-            msgCampos += "Por favor, informe o(s) valor(es) do(s) campo(s) corretamente.\n";
+            String msgCampos = preencherMensagem();
             resposta.put(Boolean.FALSE, msgCampos);
         }
         return resposta;
@@ -145,6 +144,16 @@ public class EnderecoController {
         String cep = endereco.getCep();
 
         return verificarCampos(rua, bairro, cidade, uf, cep);
+    }
+
+    private String preencherMensagem() {
+        String msg = "";
+        for (int i = 0; i < camposInvalidos.size() - 1; i++) {
+            msg += camposInvalidos.get(i) + ", ";
+        }
+        msg += camposInvalidos.get(camposInvalidos.size() - 1);
+
+        return msg;
     }
 
 }

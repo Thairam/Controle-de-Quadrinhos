@@ -32,15 +32,13 @@ public class AmigoController {
             } catch (Exception e) {
                 if (e.getMessage().contains("Duplicate")) {
                     resposta.put(Boolean.FALSE, "Já existe um registro com o mesmo cpf!");
+                } else {
+                    resposta.put(Boolean.FALSE, "Erro ao salvar o amigo, por favor tente novamente!");
                 }
                 return resposta;
             }
         } else {
-            String msgCampos = "Campos com valores inválidos: \n";
-            for (int i = 0; i < camposInvalidos.size(); i++) {
-                msgCampos += (i + 1) + ": " + camposInvalidos.get(i) + "\n";
-            }
-            msgCampos += "Por favor, informe o(s) valor(es) do(s) campo(s) corretamente.\n";
+            String msgCampos = preencherMensagem();
             resposta.put(Boolean.FALSE, msgCampos);
         }
         return resposta;
@@ -57,7 +55,7 @@ public class AmigoController {
         return lista;
     }
 
-    public HashMap<Boolean, Object> buscarAmigoPorCpf(String cpf) {
+    public HashMap<Boolean, Object> buscarAmigoPeloCpf(String cpf) {
         HashMap<Boolean, Object> resposta = new HashMap<Boolean, Object>();
 
         try {
@@ -81,23 +79,23 @@ public class AmigoController {
         return resposta;
     }
 
-    public HashMap<Boolean, String> atualizarAmigo(Amigo amigo) {
-        HashMap<Boolean, String> resposta = new HashMap<Boolean, String>();
+    public HashMap<Boolean, Object> atualizarAmigo(Amigo amigo) {
+        HashMap<Boolean, Object> resposta = new HashMap<Boolean, Object>();
 
         try {
             if (verificarAmigo(amigo)) {
                 dao.update(amigo);
-                resposta.put(Boolean.TRUE, "Registro de " + amigo.getNome() + "foi atualizado com sucesso");
+                resposta.put(Boolean.TRUE, amigo);
             } else {
-                String msgCampos = "Campos com valores inválidos: \n";
-                for (int i = 0; i < camposInvalidos.size(); i++) {
-                    msgCampos += (i + 1) + ": " + camposInvalidos.get(i) + "\n";
-                }
-                msgCampos += "Por favor, informe o(s) valor(es) do(s) campo(s) corretamente.\n";
+                String msgCampos = preencherMensagem();
                 resposta.put(Boolean.FALSE, msgCampos);
             }
         } catch (Exception e) {
-            resposta.put(Boolean.FALSE, e.getMessage());
+            if (e.getMessage().contains("Duplicate")) {
+                resposta.put(Boolean.FALSE, "Já existe um registro com o mesmo cpf!");
+            } else {
+                resposta.put(Boolean.FALSE, "Erro ao atualizar o amigo!");
+            }
             return resposta;
         }
         return resposta;
@@ -158,26 +156,6 @@ public class AmigoController {
         return AmigoController.camposInvalidos.isEmpty();
     }
 
-    public boolean nomeValidador(String nome) {
-        return nome.matches(AmigoER.ER_NOME);
-    }
-
-    public boolean dataNascimentoValidador(String data) {
-        return data.matches(AmigoER.ER_DATA_NASCIMENTO);
-    }
-
-    public boolean cpfValidador(String cpf) {
-        return cpf.matches(AmigoER.ER_CPF);
-    }
-
-    public boolean foneValidador(String fone) {
-        return fone.matches(AmigoER.ER_FONE);
-    }
-
-    public boolean emailValidador(String email) {
-        return email.matches(AmigoER.ER_EMAIL);
-    }
-
     private static boolean verificarAmigo(Amigo amigo) {
         String nome = amigo.getNome();
         String data = Utils.calendToString(amigo.getDataNascimento());
@@ -186,6 +164,16 @@ public class AmigoController {
         String email = amigo.getEmail();
 
         return verificarCampos(nome, data, cpf, fone, email);
+    }
+
+    private String preencherMensagem() {
+        String msg = "";
+        for (int i = 0; i < camposInvalidos.size() - 1; i++) {
+            msg += camposInvalidos.get(i) + ", ";
+        }
+        msg += camposInvalidos.get(camposInvalidos.size() - 1);
+
+        return msg;
     }
 
 }

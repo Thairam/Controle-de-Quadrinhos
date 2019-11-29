@@ -1,3 +1,5 @@
+package integracao;
+
 //package testeDao;
 //
 //import DAO.ColecaoDao;

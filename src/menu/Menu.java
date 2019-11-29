@@ -1,4 +1,4 @@
-package menus;
+package menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,42 +11,49 @@ import model.*;
 public class Menu {
 
     public static void menuPrincipal() {
-        System.out.println("***** MENU PRINCIPAL *****");
-        System.out.println("1: Amigos\n2: Quadrinhos\n3: Empréstimo\n4: Coleções\n5: Endereços\n0: finalizar\n");
+        System.out.println("\n***** MENU PRINCIPAL *****");
+        System.out.println("1: Amigos\n2: Quadrinhos\n3: Empréstimo\n4: Coleções\n5: Endereços\n0: Finalizar\n");
     }
 
     public static void menuPrincipalAmigos() {
-        System.out.println("****** MENU AMIGO ******");
+        System.out.println("\n****** MENU AMIGO ******");
         System.out.println("1: Adicionar amigo\n2: Atualizar amigo\n3: Listar amigos\n4: Buscar amigo por cpf\n0: Voltar\n");
     }
 
     public static void menuPrincipalEnderecos() {
-        System.out.println("****** MENU ENDEREÇO ******");
+        System.out.println("\n****** MENU ENDEREÇO ******");
         System.out.println("1: Adicionar endereço\n2: Atualizar endereço\n3: Listar endereços\n4: Excluir endereço\n0: Voltar\n");
     }
 
     public static void menuPrincipalQuadrinhos() {
-        System.out.println("****** MENU QUADRINHO ******");
+        System.out.println("\n****** MENU QUADRINHO ******");
         System.out.println("1: Adicionar quadrinho\n2: Atualizar quadrinho\n3: "
                 + "Listar quadrinhos\n4: Excluir quadrinho\n5: Buscar quadrinho pelo nome\n"
                 + "0: Voltar\n");
     }
 
-    public static void apresentarListaAmigos(ArrayList<Amigo> amigos) {
+    public static void menuPrincipalEmprestimos() {
+        System.out.println("\n****** MENU EMPRÈSTIMO ******");
+        System.out.println("1: Efetuar empréstimo\n2: Efetuar devolução\n3: Listar empréstimos\n0: Voltar\n");
+    }
+
+    public static void apresentarAmigos(ArrayList<Amigo> amigos) {
         if (amigos.isEmpty()) {
             System.out.println("Nenhum amigo registrado!");
         } else {
             System.out.println("");
             for (Amigo amigo : amigos) {
-                System.out.println("Nome: " + amigo.getNome() + " || Cpf: " + amigo.getCpf()
+                System.out.println(
+                        "(" + (amigos.indexOf(amigo) + 1) + "): "
+                        + "Nome: " + amigo.getNome() + " || Cpf: " + amigo.getCpf()
                         + " || Data de Nascimento: " + Utils.calendToString(amigo.getDataNascimento())
                         + " || Email: " + amigo.getEmail());
             }
-            System.out.println("\n");
+            System.out.println();
         }
     }
 
-    public static void apresentarListaEnderecos(ArrayList<Endereco> enderecos, String msg1, String msg2) {
+    public static void apresentarEnderecos(ArrayList<Endereco> enderecos, String msg1, String msg2) {
         if (enderecos.isEmpty()) {
             System.out.println("Nenhum endereço registrado!");
         } else {
@@ -56,13 +63,13 @@ public class Menu {
                         + enderecos.get(i).getRua() + " - " + enderecos.get(i).getBairro() + " - "
                         + enderecos.get(i).getCep() + " - " + enderecos.get(i).getUf());
             }
-            System.out.println(msg2 + "\n");
+            System.out.print("\n" + msg2);
         }
     }
 
-    public static void apresentarListaQuadrinhos(ArrayList<Quadrinho> quadrinhos, String msg1, String msg2) {
+    public static void apresentarQuadrinhos(ArrayList<Quadrinho> quadrinhos, String msg1, String msg2) {
         if (quadrinhos.isEmpty()) {
-            System.out.println("Nenhum quadrinho registrado!");
+            System.out.println("\n** Nenhum quadrinho registrado! **\n");
         } else {
             System.out.println(msg1);
             for (Quadrinho quadrinho : quadrinhos) {
@@ -70,11 +77,29 @@ public class Menu {
                         "(" + (quadrinhos.indexOf(quadrinho) + 1) + "): "
                         + "Nome: " + quadrinho.getNome() + " || Valor: R$" + String.format("%.2f", quadrinho.getValor())
                         + " || Edição: " + quadrinho.getEdicao() + " || Genêro: " + quadrinho.getGenero()
-                        + "\nVersões registradas: \n* Física: "
-                        + (quadrinho.isVersaoFisica() ? "registrada\n" : "não registrada\n") + "* Digital: "
-                        + (quadrinho.isVersaoDigital() ? "registrada\n" : "não registrada\n")
-                        + "Disponibilidade: " + (quadrinho.isDisponibilidade() ? "Disponível" : "indisponível")
-                        + "\n");
+                        + "\nVersões registradas: \n(*) Versão Física: "
+                        + (quadrinho.isVersaoFisica() ? "registrada" : "não registrada")
+                        + " || " + (quadrinho.getDisponibilidadeFisica() ? "Disponível\n" : "Indisponível\n")
+                        + "(*) Versão Digital: " + (quadrinho.isVersaoDigital() ? "registrada" : "não registrada")
+                        + " || " + (quadrinho.getDisponibilidadeDigital() ? "Disponível\n" : "Indisponível\n"));
+            }
+            System.out.println(msg2);
+        }
+    }
+
+    public static void apresentarEmprestimos(ArrayList<Emprestimo> emprestimos, String msg1, String msg2) {
+        if (emprestimos.isEmpty()) {
+            System.out.println("\n** Nenhum empréstimo registrado! **");
+        } else {
+            System.out.println("\n*** LISTA DE EMPRÈSTIMOS ***");
+            System.out.println(msg1);
+            for (Emprestimo emprestimo : emprestimos) {
+                System.out.println(
+                        "(" + (emprestimos.indexOf(emprestimo) + 1) + "): "
+                        + "Amigo: " + emprestimo.getAmigo().getNome()
+                        + " || Data do empréstimo: " + Utils.calendToString(emprestimo.getDataEmprestimo())
+                        + " || Data da devolução: " + Utils.calendToString(emprestimo.getDataDevolucao())
+                        + " || O empréstimo está: " + emprestimo.getEstado());
             }
             System.out.println(msg2);
         }
@@ -107,12 +132,34 @@ public class Menu {
                     + "\nVersões registradas: \n* Física: "
                     + (quadrinho.isVersaoFisica() ? "registrada\n" : "não registrada\n") + "* Digital: "
                     + (quadrinho.isVersaoDigital() ? "registrada\n" : "não registrada\n")
-                    + "Disponibilidade: " + (quadrinho.isDisponibilidade() ? "Disponível" : "indisponível")
+                    + "Disponibilidade: " + (quadrinho.getDisponibilidadeFisica() ? "Disponível" : "indisponível")
                     + "\n");
         } else {
             System.out.println(resultQuadrinho.get(false) + "\n");
         }
 
+    }
+
+    public static void apresentarQuadrinhosDisponiveis(ArrayList<Quadrinho> quadrinhos, String msg1, String msg2) {
+        if (quadrinhos.isEmpty()) {
+            System.out.println("\n** Não há nenhum quadrinho disponível para empréstimo no momento! **\n");
+        } else {
+            System.out.println(msg1);
+            for (Quadrinho quadrinho : quadrinhos) {
+                System.out.println(
+                        "(" + (quadrinhos.indexOf(quadrinho) + 1) + "): "
+                        + "Nome: " + quadrinho.getNome() + " || Valor: R$" + String.format("%.2f", quadrinho.getValor())
+                        + " || Edição: " + quadrinho.getEdicao() + " || Genêro: " + quadrinho.getGenero());
+                if (quadrinho.getDisponibilidadeFisica()) {
+                    System.out.println("(F): Versão Física Disponível");
+                }
+                if (quadrinho.getDisponibilidadeDigital()) {
+                    System.out.println("(D): Versão Digital Disponível");
+                }
+                System.out.println("");
+            }
+            System.out.println(msg2);
+        }
     }
 
     public static void apresentarCuriosidadeQuadrinho(Quadrinho quadrinho) {

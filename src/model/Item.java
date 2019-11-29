@@ -61,7 +61,7 @@ public class Item extends Object implements Entity {
 
     @Override
     public String getFields() {
-        return ("id, id_emprestimo, id_quadrinho, versao");
+        return ("id_emprestimo, id_quadrinho, versao");
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Item extends Object implements Entity {
         return this.id + "<"
                 + this.emprestimo.getId() + ","
                 + this.quadrinho.getId() + ","
-                + this.getVersao();
+                + Utils.quotedStr(this.getVersao());
     }
 
     @Override

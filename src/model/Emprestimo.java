@@ -72,15 +72,17 @@ public class Emprestimo extends Object implements Entity {
 
     @Override
     public String getFields() {
-        return "id, data_emprestimo, data_devolucao, id_quadrinho, id_amigo, estado";
+        return "id_amigo, data_emprestimo, data_devolucao, estado";
     }
 
     @Override
     public String getValues() {
-        return (dataEmprestimo != null ? "'" + Utils.calendToString(dataEmprestimo, "yyyy/MM/dd") + "'" : "null") + ", "
-                + (dataDevolucao != null ? "'" + Utils.calendToString(dataDevolucao, "yyyy/MM/dd") + "'" : "null") + ", "
-                + (amigo != null ? amigo.getId() + ", " : "null, ")
-                + estado;
+        return (amigo != null ? amigo.getId() : "null, ") + ", "
+                + (dataEmprestimo != null ? "'"
+                        + Utils.calendToString(dataEmprestimo, "yyyy/MM/dd") + "'" : "null") + ", "
+                + (dataDevolucao != null ? "'"
+                        + Utils.calendToString(dataDevolucao, "yyyy/MM/dd") + "'" : "null") + ", "
+                + Utils.quotedStr(estado);
     }
 
     @Override

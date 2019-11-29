@@ -18,7 +18,8 @@ public class Quadrinho extends Object implements Entity {
     private boolean versaoDigital;
     private String edicao;
     private String genero;
-    private boolean disponibilidade;
+    private boolean disponibilidadeF;
+    private boolean disponibilidadeD;
     private String curiosidade;
     private double nota;
     private boolean recomendavel;
@@ -28,7 +29,7 @@ public class Quadrinho extends Object implements Entity {
 
     public Quadrinho(int id, Colecao colecao, String nome, double valor, String editora,
             String ISBN, boolean versaoFisica, boolean versaoDigital, String edicao,
-            String genero, boolean disponibilidade, String curiosidade, double nota, boolean recomendavel
+            String genero, boolean disponibilidadeF, boolean disponibilidadeD, String curiosidade, double nota, boolean recomendavel
     ) {
         this.id = id;
         this.colecao = colecao;
@@ -40,7 +41,8 @@ public class Quadrinho extends Object implements Entity {
         this.versaoDigital = versaoDigital;
         this.edicao = edicao;
         this.genero = genero;
-        this.disponibilidade = disponibilidade;
+        this.disponibilidadeF = disponibilidadeF;
+        this.disponibilidadeD = disponibilidadeD;
         this.curiosidade = curiosidade;
         this.nota = nota;
         this.recomendavel = recomendavel;
@@ -48,10 +50,10 @@ public class Quadrinho extends Object implements Entity {
 
     public Quadrinho(Colecao colecao, String nome, double valor, String editora,
             String ISBN, boolean versaoFisica, boolean versaoDigital, String edicao,
-            String genero, boolean disponibilidade, String curiosidade, double nota, boolean recomendavel
+            String genero, boolean disponibilidadeF, boolean disponibilidadeD, String curiosidade, double nota, boolean recomendavel
     ) {
         this(0, colecao, nome, valor, editora, ISBN, versaoFisica, versaoDigital, edicao, genero,
-                disponibilidade, curiosidade, nota, recomendavel);
+                disponibilidadeF, disponibilidadeD, curiosidade, nota, recomendavel);
     }
 
     public Colecao getColecao() {
@@ -134,12 +136,20 @@ public class Quadrinho extends Object implements Entity {
         this.genero = genero;
     }
 
-    public boolean isDisponibilidade() {
-        return disponibilidade;
+    public boolean getDisponibilidadeFisica() {
+        return disponibilidadeF;
     }
 
-    public void setDisponibilidade(boolean disponibilidade) {
-        this.disponibilidade = disponibilidade;
+    public void setDisponibilidadeFisica(boolean disponibilidadeF) {
+        this.disponibilidadeF = disponibilidadeF;
+    }
+
+    public boolean getDisponibilidadeDigital() {
+        return disponibilidadeD;
+    }
+
+    public void setDisponibilidadeDigital(boolean disponibilidadeD) {
+        this.disponibilidadeD = disponibilidadeD;
     }
 
     public String getCuriosidade() {
@@ -168,7 +178,7 @@ public class Quadrinho extends Object implements Entity {
 
     @Override
     public String getFields() {
-        return "id_colecao, nome, valor, editora, isbn, versao_fisica, versao_digital, edicao, genero, disponibilidade, curiosidade, nota, recomendavel";
+        return "id_colecao, nome, valor, editora, isbn, versao_fisica, versao_digital, edicao, genero, disponibilidadeF, disponibilidadeD, curiosidade, nota, recomendavel";
     }
 
     public String getValues() {
@@ -181,7 +191,8 @@ public class Quadrinho extends Object implements Entity {
                 + versaoDigital + ","
                 + Utils.quotedStr(getEdicao()) + ","
                 + Utils.quotedStr(getGenero()) + ","
-                + disponibilidade + ","
+                + disponibilidadeF + ","
+                + disponibilidadeD + ","
                 + Utils.quotedStr(getCuriosidade()) + ","
                 + nota + ","
                 + recomendavel;

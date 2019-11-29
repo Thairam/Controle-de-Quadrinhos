@@ -42,7 +42,8 @@ public class QuadrinhoDao<T> extends Dao<T> {
                 resultSet.getBoolean("versao_digital"),
                 resultSet.getString("edicao"),
                 resultSet.getString("genero"),
-                resultSet.getBoolean("disponibilidade"),
+                resultSet.getBoolean("disponibilidadeF"),
+                resultSet.getBoolean("disponibilidadeD"),
                 resultSet.getString("curiosidade"),
                 resultSet.getDouble("nota"),
                 resultSet.getBoolean("recomendavel")

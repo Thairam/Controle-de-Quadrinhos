@@ -1,4 +1,4 @@
-package testeDao;
+package integracao;
 
 import model.Endereco;
 import dao.EnderecoDao;
@@ -12,7 +12,7 @@ import org.junit.Test;
  *
  * @author Thairam Michel
  */
-public class testeDaoEndereco {
+public class TesteDaoEndereco {
 
     Dao<Endereco> dao;
     EnderecoController enderecoController = new EnderecoController();

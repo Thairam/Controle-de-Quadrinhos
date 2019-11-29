@@ -51,7 +51,6 @@ public abstract class Dao<T> {
 
         } catch (SQLException ex) {
             throw new Exception(ex);
-//            JOptionPane.showMessageDialog(null, "Falha ao salvar!\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } finally {
 
             try {
@@ -89,7 +88,6 @@ public abstract class Dao<T> {
 
         } catch (SQLException ex) {
             throw new Exception(ex);
-//            JOptionPane.showMessageDialog(null, "Falha ao salvar!\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 ConnectionFactory.closeConnection(con, stmt);
@@ -112,7 +110,6 @@ public abstract class Dao<T> {
             stmt.execute();
         } catch (SQLException ex) {
             throw new Exception(ex);
-//            JOptionPane.showMessageDialog(null, "Falha ao excluir!\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 ConnectionFactory.closeConnection(con, stmt);
@@ -165,7 +162,6 @@ public abstract class Dao<T> {
             return lista;
         } catch (SQLException ex) {
             throw new Exception(ex);
-//            JOptionPane.showMessageDialog(null, "Falha ao executar consulta!\n" + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         } finally {
             try {
                 ConnectionFactory.closeConnection(con, stmt, rs);

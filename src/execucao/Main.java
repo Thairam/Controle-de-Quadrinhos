@@ -1,16 +1,16 @@
-package Main;
+package execucao;
 
 import java.util.Scanner;
 import model.*;
 import controller.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import menus.Menu;
+import menu.Menu;
 
 /**
  * @author Thairam Michel
  */
-public class Principal {
+public class Main {
 
     public static void main(String[] args) {
 
@@ -19,13 +19,17 @@ public class Principal {
         AmigoController amigoControl = new AmigoController();
         EnderecoController enderecoControl = new EnderecoController();
         QuadrinhoController quadrinhoControl = new QuadrinhoController();
+        EmprestimoController emprestimoControl = new EmprestimoController();
 
         HashMap<Boolean, Object> resultAmigo;
         HashMap<Boolean, Object> resultEndereco;
         HashMap<Boolean, Object> resultQuadrinho;
+        HashMap<Boolean, Object> resultEmprestimo;
 
         ArrayList<Endereco> enderecos;
         ArrayList<Quadrinho> quadrinhos;
+        ArrayList<Emprestimo> emprestimos;
+        ArrayList<Amigo> amigos;
 
         while (true) {
             int opcao = 0;
@@ -46,6 +50,7 @@ public class Principal {
                 case 1:
                     // Amigos
                     enderecos = enderecoControl.listarTodosOsEnderecos();
+                    amigos = amigoControl.listarTodosOsAmigos();
 
                     while (opcao != 0) {
                         do {
@@ -85,7 +90,7 @@ public class Principal {
                                     String mensagem2 = "Digite 0 para sair!";
 
                                     do {
-                                        Menu.apresentarListaEnderecos(enderecos, mensagem1, mensagem2);
+                                        Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
                                         try {
                                             opEndereco = Integer.parseInt(sc.nextLine());
                                         } catch (NumberFormatException e) {
@@ -102,18 +107,19 @@ public class Principal {
 
                                     System.out.println(resultAmigo.containsKey(true)
                                             ? "Amigo cadastrado com sucesso" : resultAmigo.get(false));
+
                                     break;
                                 case 2:
                                     // Atualizar amigo
                                     System.out.println("Informe o cpf do amigo(111.111.111-00): ");
                                     cpf = sc.nextLine();
-                                    resultAmigo = amigoControl.buscarAmigoPorCpf(cpf);
+                                    resultAmigo = amigoControl.buscarAmigoPeloCpf(cpf);
                                     Menu.apresentarAmigo(resultAmigo);
 
                                     if (resultAmigo.containsKey(true)) {
                                         Amigo amigo = (Amigo) resultAmigo.get(true);
 
-                                        System.out.println("Atenção: caso não pretenda atualizar um determinado campo, apenas aperte a tecla enter!");
+                                        System.out.println("** Atenção: caso não pretenda atualizar um determinado campo, apenas aperte a tecla enter! **");
                                         System.out.println("Informe o novo nome: ");
                                         nome = sc.nextLine();
 
@@ -131,9 +137,9 @@ public class Principal {
 
                                         opEndereco = 0;
                                         mensagem1 = "Escolha um dos endereços: ";
-                                        mensagem2 = "Caso não deseje modificar o endereço digite 0!";
+                                        mensagem2 = "Caso não deseje modificar o endereço digite (0): ";
                                         do {
-                                            Menu.apresentarListaEnderecos(enderecos, mensagem1, mensagem2);
+                                            Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
                                             try {
                                                 opEndereco = Integer.parseInt(sc.nextLine());
                                             } catch (NumberFormatException e) {
@@ -164,12 +170,13 @@ public class Principal {
                                                 amigo.setEndereco(enderecos.get(opEndereco - 1));
                                             }
 
-                                            HashMap<Boolean, String> resultAtualizacaoAmigo = amigoControl
+                                            HashMap<Boolean, Object> resultAtualizacaoAmigo = amigoControl
                                                     .atualizarAmigo(amigo);
 
                                             System.out.println(resultAtualizacaoAmigo.containsKey(true)
                                                     ? "Amigo atualizado com sucesso"
-                                                    : "ERRO!");
+                                                    : "(*) Os campos a seguir foram fornecidos com valores inválidos: \n(*) "
+                                                    + resultAmigo.get(false) + ".\n");
                                         } else {
                                             System.out.println("Dados inválidos!");
                                         }
@@ -177,15 +184,13 @@ public class Principal {
 
                                     break;
                                 case 3:
-                                    // Listar todos os amigos
-                                    ArrayList<Amigo> lista = amigoControl.listarTodosOsAmigos();
-                                    Menu.apresentarListaAmigos(lista);
+                                    Menu.apresentarAmigos(amigos);
                                     break;
                                 case 4:
                                     // Buscar amigo pelo cpf
                                     System.out.println("Informe o cpf do amigo(111.111.111-00): ");
                                     cpf = sc.nextLine();
-                                    resultAmigo = amigoControl.buscarAmigoPorCpf(cpf);
+                                    resultAmigo = amigoControl.buscarAmigoPeloCpf(cpf);
                                     Menu.apresentarAmigo(resultAmigo);
                                     break;
                             }
@@ -195,6 +200,7 @@ public class Principal {
                 case 2:
                     // Quadrinhos
                     while (opcao != 0) {
+                        int opcaoQuadrinho = 0;
                         quadrinhos = quadrinhoControl.listarTodosOsQuadrinhos();
                         do {
                             Menu.menuPrincipalQuadrinhos();
@@ -220,11 +226,11 @@ public class Principal {
                                     System.out.print("Informe o valor do quadrinho(ex: 16.90): ");
                                     double valor = Double.parseDouble(sc.nextLine());
 
-                                    System.out.print("Informe a editora: ");
+                                    System.out.print("Informe a editora(DC Comics): ");
                                     String editora = sc.nextLine();
 
                                     System.out.println("Informe o ISBN(ex: 9870044550127 - "
-                                            + "informar apenas dígitos(10 ou 13)): ");
+                                            + "informar apenas dígitos(10 ou 13) sem espaços): ");
                                     String isbn = sc.nextLine();
 
                                     System.out.println("Informe as versões disponíveis: ");
@@ -241,6 +247,8 @@ public class Principal {
                                     System.out.print("Informe o genêro: ");
                                     String genero = sc.nextLine();
 
+                                    System.out.println("\n*** Caso não deseje informar os campos opcionais, aperte a tecla enter ***");
+
                                     System.out.println("(Opcional) Informe alguma curiosidade sobre o quadrinho"
                                             + "(ex: Inspirou o filme): ");
                                     String curiosidade = sc.nextLine();
@@ -249,35 +257,133 @@ public class Principal {
                                             + "(s ou n): ");
                                     String relevancia = sc.nextLine();
 
-                                    System.out.print("(Opcional) Atribua uma nota para o quadrinho(0-10): ");
+                                    System.out.print("(Opcional) Atribua uma nota para o quadrinho(0 - 10): ");
                                     String notaS = sc.nextLine();
                                     double nota = Double.parseDouble(notaS.equals("") ? "0" : notaS);
 
-                                    resultAmigo = quadrinhoControl.salvarQuadrinho(nomeQuadrinho, valor, editora, isbn,
+                                    resultQuadrinho = quadrinhoControl.salvarQuadrinho(nomeQuadrinho, valor, editora, isbn,
                                             versaoFisica, versaoDigital, edicao, genero, curiosidade,
-                                            curiosidade, nota, relevancia);
+                                            nota, relevancia);
 
-                                    System.out.println(resultAmigo.containsKey(true)
+                                    System.out.println(resultQuadrinho.containsKey(true)
                                             ? "Quadrinho cadastrado com sucesso!\n"
-                                            : resultAmigo.get(false));
+                                            : "(*) Os campos a seguir foram fornecidos com valores inválidos: \n(*) "
+                                            + resultQuadrinho.get(false) + ".\n");
 
                                 } catch (NumberFormatException e) {
-                                    System.out.print("Informe um valor válido da próxima vez!\n");
+                                    System.out.println("\n** Dado inválido para o campo! **");
+                                    System.out.println("** É importante seguir os padrões dos exemplos fornecidos nos campos! **");
+                                    System.out.println("** Informe um valor válido da próxima vez! **\n");
                                     break;
                                 }
 
                                 break;
                             case 2:
                                 // Atualizar quadrinho
-                                break;
+                                Menu.apresentarQuadrinhos(quadrinhos, "", "");
+                                opcaoQuadrinho = 0;
+                                do {
+                                    System.out.println("** Informe o quadrinho, que será "
+                                            + "atualizado **\n** Digite 0"
+                                            + " para sair!  **");
+                                    try {
+                                        opcaoQuadrinho = Integer.parseInt(sc.nextLine());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Digite uma opção válida!");
+                                    }
+                                } while (opcaoQuadrinho < 0 || opcaoQuadrinho > quadrinhos.size());
+
+                                if (opcaoQuadrinho == 0) {
+                                    break;
+                                }
+
+                                Quadrinho quadrinho = quadrinhos.get(opcaoQuadrinho - 1);
+
+                                System.out.println("*** ATENÇÂO ***");
+                                System.out.println("*** Caso não deseje alterar o valor de um campo, aperte a tecla ENTER ***\n");
+                                try {
+                                    System.out.print("Informe o novo nome do quadrinho: ");
+                                    String nomeQuadrinho = sc.nextLine();
+
+                                    System.out.print("Informe o novo valor do quadrinho(ex: 16.90): ");
+                                    String valorS = sc.nextLine();
+                                    double valor = Double.parseDouble(valorS.equals("") ? "1111" : valorS);
+
+                                    System.out.print("Informe a editora(DC Comics): ");
+                                    String editora = sc.nextLine();
+
+                                    System.out.println("Informe o ISBN(ex: 9870044550127 - "
+                                            + "informar apenas dígitos(10 ou 13) sem espaços): ");
+                                    String isbn = sc.nextLine();
+
+                                    String versaoFisica = "";
+                                    if (!quadrinho.isVersaoFisica()) {
+                                        System.out.print("Deseja incluir a versão física do quadrinho(s ou n): ");
+                                        versaoFisica = sc.nextLine();
+                                    }
+
+                                    String versaoDigital = "";
+                                    if (!quadrinho.isVersaoDigital()) {
+                                        System.out.print("Deseja incluir a versão Digital(s ou n): ");
+                                        versaoDigital = sc.nextLine();
+                                    }
+
+                                    System.out.print("Informe a nova edição(ex: primeira edição): ");
+                                    String edicao = sc.nextLine();
+
+                                    System.out.print("Informe o novo genêro: ");
+                                    String genero = sc.nextLine();
+
+                                    System.out.println("\n*** Caso não deseje informar os campos opcionais, aperte a tecla enter ***");
+
+                                    System.out.println("(Opcional) Informe alguma curiosidade sobre o quadrinho"
+                                            + "(ex: Inspirou o filme): ");
+                                    String curiosidade = sc.nextLine();
+
+                                    System.out.print("(Opcional) Informe se você leria novamente o quadrinho"
+                                            + "(s ou n): ");
+                                    String relevancia = sc.nextLine();
+
+                                    System.out.print("(Opcional) Atribua uma nota para o quadrinho(0 - 10): ");
+                                    String notaS = sc.nextLine();
+                                    double nota = Double.parseDouble(notaS.equals("") ? "0.001" : notaS);
+
+                                    resultQuadrinho = quadrinhoControl.atualizarQuadrinho(
+                                            quadrinho, nomeQuadrinho, valor, editora, isbn,
+                                            versaoFisica, versaoDigital, edicao, genero,
+                                            curiosidade, nota, relevancia);
+
+                                    if (resultQuadrinho.containsKey(true)) {
+                                        System.out.println("\n*** Quadrinho atualizado com sucesso! ***\n");
+                                    } else {
+                                        String erro = (String) resultQuadrinho.get(false);
+                                        if (erro.contains("encontra-se emprestada")) {
+                                            System.out.println("*** Atenção ***");
+                                            System.out.println("Não é possível atualizar a(s) versões disponíveis do quadrinho, "
+                                                    + "pois esta(s) estão emprestadas. Por favor efetue a devolução antes!\n");
+                                        } else if (erro.contains("Erro")) {
+                                            System.out.println(erro + "\n");
+                                        } else {
+                                            System.out.println("(*) Os campos a seguir foram fornecidos com valores inválidos: \n(*) "
+                                                    + erro + "\n");
+                                        }
+                                    }
+
+                                    break;
+                                } catch (NumberFormatException e) {
+                                    System.out.println("\n** Dado inválido para o campo! **");
+                                    System.out.println("** É importante seguir os padrões dos exemplos fornecidos nos campos! **");
+                                    System.out.println("** Informe um valor válido da próxima vez! **\n");
+                                    break;
+                                }
                             case 3:
                                 // Listar quadrinhos
-                                Menu.apresentarListaQuadrinhos(quadrinhos, "", "");
-                                int opcaoQuadrinho = 0;
+                                Menu.apresentarQuadrinhos(quadrinhos, "", "");
+                                opcaoQuadrinho = 0;
                                 do {
                                     System.out.println("** Informe o quadrinho, para visualizar "
-                                            + "possíveis curiosidades sobre ele **\nDigite 0"
-                                            + " para sair!");
+                                            + "possíveis curiosidades sobre ele **\n** Digite 0"
+                                            + " para sair!  **");
                                     try {
                                         opcaoQuadrinho = Integer.parseInt(sc.nextLine());
                                     } catch (NumberFormatException e) {
@@ -290,8 +396,33 @@ public class Principal {
                                 }
 
                                 break;
+
                             case 4:
                                 // Excluir quadrinho
+                                Menu.apresentarQuadrinhos(quadrinhos, "", "");
+                                opcaoQuadrinho = 0;
+                                do {
+                                    System.out.println("** Informe o quadrinho que será "
+                                            + "deletado **\n** Digite 0"
+                                            + " para sair!  **");
+                                    try {
+                                        opcaoQuadrinho = Integer.parseInt(sc.nextLine());
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Digite uma opção válida!");
+                                    }
+                                } while (opcaoQuadrinho < 0 || opcaoQuadrinho > quadrinhos.size());
+
+                                if (opcaoQuadrinho == 0) {
+                                    break;
+                                }
+
+                                resultQuadrinho = quadrinhoControl
+                                        .deletarQuadrinho(quadrinhos.get(opcaoQuadrinho - 1));
+
+                                System.out.println(resultQuadrinho.containsKey(true)
+                                        ? resultQuadrinho.get(true)
+                                        : resultQuadrinho.get(false));
+
                                 break;
                             case 5:
                                 // Buscar quadrinho pelo nome
@@ -309,7 +440,163 @@ public class Principal {
                     break;
                 case 3:
                     // Empréstimo
+                    while (opcao != 0) {
+                        emprestimos = emprestimoControl.listarTodosOsEmprestimos();
+                        quadrinhos = quadrinhoControl.listarTodosOsQuadrinhosDisponiveis();
+                        amigos = amigoControl.listarTodosOsAmigos();
+
+                        do {
+                            Menu.menuPrincipalEmprestimos();
+                            try {
+                                opcao = Integer.parseInt(sc.nextLine());
+                            } catch (NumberFormatException e) {
+                                System.out.println("Digite uma opção válida!");
+                            }
+                        } while (opcao < 0 || opcao > 3);
+
+                        switch (opcao) {
+
+                            case 0:
+                                break;
+                            case 1:
+                                // Efetuar empréstimo
+                                System.out.println("*** EFETUANDO EMPRÈSTIMO ***");
+                                HashMap<Quadrinho, String> quadrinhosEmprestimo = new HashMap<Quadrinho, String>();
+                                Amigo amigo;
+                                while (opcao != 0) {
+                                    try {
+                                        if (opcao == 0) {
+                                            break;
+                                        }
+
+                                        do {
+                                            do {
+                                                quadrinhos = quadrinhoControl.listarTodosOsQuadrinhosDisponiveis();
+                                                Menu.apresentarQuadrinhosDisponiveis(quadrinhos, "", "");
+                                                if (quadrinhos.isEmpty()) {
+                                                    opcao = 0;
+                                                    break;
+                                                }
+                                                System.out.print("Informe o quadrinho (Digite 0 para cancelar): ");
+                                                opcao = Integer.parseInt(sc.nextLine());
+                                            } while (opcao < 0 || opcao > quadrinhos.size());
+
+                                            if (opcao == 0) {
+                                                break;
+                                            }
+
+                                            Quadrinho quadrinho = quadrinhos.get(opcao - 1);
+
+                                            do {
+                                                System.out.println("\n** Informe a versão desejada **");
+                                                System.out.print("(1) Física\n"
+                                                        + "(2) Digital\n"
+                                                        + "(0) Cancelar\n"
+                                                        + "opcão: ");
+                                                opcao = Integer.parseInt(sc.nextLine());
+                                            } while (opcao < 0 || opcao > 2);
+
+                                            if (opcao == 0) {
+                                                break;
+                                            }
+
+                                            if (!emprestimoControl.validarEscolhaDeQuadrinho(quadrinho, opcao,
+                                                    quadrinhosEmprestimo)) {
+                                                System.out.println("\nVocê tentou efetuar o empréstimo de uma versão"
+                                                        + " indisponível, da próxima vez esteja mais atento!");
+                                                opcao = 0;
+                                                break;
+                                            }
+
+                                            do {
+                                                System.out.print("\nInforme uma opção válida: \n"
+                                                        + "(1) concluir empréstimo\n"
+                                                        + "(2) continuar adicionando\n"
+                                                        + "(0) para cancelar\n"
+                                                        + "opcão: ");
+                                                opcao = Integer.parseInt(sc.nextLine());
+                                            } while (opcao < 0 || opcao > 2);
+
+                                        } while (opcao == 2);
+
+                                        if (opcao == 0) {
+                                            break;
+                                        }
+
+                                        System.out.println("\n** INFORMAR DATA DE DEVOLUÇÃO **");
+                                        System.out.println("* Por padrão, a data do empréstimo é a data atual! *\n");
+
+                                        System.out.print("Informar data de devolução(00/00/0000)\n"
+                                                + "opção (Digite 0 para cancelar): ");
+                                        String dataDevolucao = sc.nextLine();
+
+                                        if ("0".equals(dataDevolucao)) {
+                                            break;
+                                        }
+
+                                        System.out.println("\n** INFORMAR AMIGO **");
+                                        do {
+                                            Menu.apresentarAmigos(amigos);
+                                            System.out.print("Informe o amigo (digite 0 para cancelar): ");
+                                            opcao = Integer.parseInt(sc.nextLine());
+                                        } while (opcao < 0 || opcao > amigos.size());
+
+                                        if (opcao == 0) {
+                                            break;
+                                        }
+
+                                        amigo = amigos.get(opcao - 1);
+
+                                        resultEmprestimo = emprestimoControl
+                                                .efetuarEmprestimo(quadrinhosEmprestimo, amigo, dataDevolucao);
+
+                                        System.out.println(resultEmprestimo.containsKey(true)
+                                                ? "\n" + resultEmprestimo.get(true)
+                                                : "\n" + resultEmprestimo.get(false)
+                                        );
+
+                                        break;
+
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Digite uma opção válida!");
+                                        break;
+                                    }
+                                }
+
+                                break;
+
+                            case 2:
+                                // Efetuar devolução
+                                try {
+                                    do {
+                                        String msg1 = "** Informe o empréstimo que será devolvido **\n";
+                                        String msg2 = "\n** Para cancelar digite 0 **";
+                                        Menu.apresentarEmprestimos(emprestimos, msg1, msg2);
+                                        System.out.print("opcao: ");
+                                        opcao = Integer.parseInt(sc.nextLine());
+                                    } while (opcao < 0 || opcao > emprestimos.size());
+
+                                    if (opcao == 0) {
+                                        break;
+                                    }
+                                    
+                                    
+
+                                } catch (NumberFormatException e) {
+                                    System.out.println("\nDa próxima vez, digite uma opção válida!");
+                                    break;
+                                }
+
+                                break;
+                            case 3:
+                                // listar empréstimos
+                                Menu.apresentarEmprestimos(emprestimos, "", "");
+                                break;
+                        }
+                    }
+
                     break;
+
                 case 4:
                     // Coleções
                     break;
@@ -350,8 +637,9 @@ public class Principal {
                                 resultEndereco = enderecoControl.salvarEndereco(rua, bairro, cidade, uf, cep);
 
                                 System.out.println(resultEndereco.containsKey(true)
-                                        ? "Endereço cadastrado com sucesso" : resultEndereco.get(false));
-
+                                        ? "Endereço cadastrado com sucesso"
+                                        : "(*) Os campos a seguir foram fornecidos com valores inválidos: \n(*) "
+                                        + resultEndereco.get(false) + ".\n");
                                 break;
                             case 2:
                                 // Atualizar endereço
@@ -361,7 +649,7 @@ public class Principal {
                                 String mensagem1 = "Informe o endereço a ser atualizado: ";
                                 String mensagem2 = "Digite 0 para cancelar!";
                                 do {
-                                    Menu.apresentarListaEnderecos(enderecos, mensagem1, mensagem2);
+                                    Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
                                     try {
                                         opEndereco = Integer.parseInt(sc.nextLine());
                                     } catch (NumberFormatException e) {
@@ -428,7 +716,7 @@ public class Principal {
 
                             case 3:
                                 // Listar endereços
-                                Menu.apresentarListaEnderecos(enderecos, "", "");
+                                Menu.apresentarEnderecos(enderecos, "", "");
                                 break;
                             case 4:
                                 // Excluir endereço
@@ -436,7 +724,7 @@ public class Principal {
                                 mensagem2 = "Digite 0 para cancelar!";
                                 opEndereco = 0;
                                 do {
-                                    Menu.apresentarListaEnderecos(enderecos, mensagem1, mensagem2);
+                                    Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
                                     try {
                                         opEndereco = Integer.parseInt(sc.nextLine());
                                     } catch (NumberFormatException e) {
@@ -462,5 +750,4 @@ public class Principal {
             }
         }
     }
-
 }
