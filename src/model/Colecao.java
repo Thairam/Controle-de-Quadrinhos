@@ -10,16 +10,16 @@ public class Colecao extends Object implements Entity {
 
     private int id;
     private String nome;
-    private int qtd_quadrinhos;
+    private int tamanhoTotal;
 
-    public Colecao(int id, String nome, int quantidade) {
+    public Colecao(int id, String nome, int tamTotal) {
         this.id = id;
         this.nome = nome;
-        this.qtd_quadrinhos = quantidade;
+        this.tamanhoTotal = tamTotal;
     }
 
-    public Colecao(String nome, int quantidade) {
-        this(0, nome, quantidade);
+    public Colecao(String nome, int tamTotal) {
+        this(0, nome, tamTotal);
     }
 
     public int getId() {
@@ -38,23 +38,23 @@ public class Colecao extends Object implements Entity {
         this.nome = nome;
     }
 
-    public int getQuantidade() {
-        return qtd_quadrinhos;
+    public int getQuantidadeTotalDeQuadrinhos() {
+        return tamanhoTotal;
     }
 
-    public void setQuantidade(int quantidade) {
-        this.qtd_quadrinhos = quantidade;
+    public void setQuantidadeTotalDeQuadrinhos(int quantidade) {
+        this.tamanhoTotal = quantidade;
     }
 
     @Override
     public String getFields() {
-        return "nome, qtd_quadrinhos";
+        return "nome, tam_total";
     }
 
     @Override
     public String getValues() {
         return Utils.quotedStr(getNome()) + ","
-                + getQuantidade();
+                + getQuantidadeTotalDeQuadrinhos();
     }
 
     @Override

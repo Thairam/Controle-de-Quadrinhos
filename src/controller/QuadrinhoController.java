@@ -61,7 +61,7 @@ public class QuadrinhoController {
             try {
                 definirValoresDouble(quadrinho, valor, nota);
                 verificarInclusaoDeVersoes(quadrinho, versaoFisicaS, versaoDigitalS);
-                setQuadrinho(quadrinho, nome, editora, isbn, edicao, genero, recomendavelS);
+                definirCamposDoQuadrinho(quadrinho, nome, editora, isbn, edicao, genero, recomendavelS);
                 dao.update(quadrinho);
                 resposta.put(Boolean.TRUE, quadrinho);
             } catch (Exception e) {
@@ -80,7 +80,7 @@ public class QuadrinhoController {
         return resposta;
     }
 
-    private void setQuadrinho(Quadrinho quadrinho, String nome, String editora, String isbn, String edicao, String genero, String recomendavelS) {
+    private void definirCamposDoQuadrinho(Quadrinho quadrinho, String nome, String editora, String isbn, String edicao, String genero, String recomendavelS) {
         if (!"".equals(nome)) {
             quadrinho.setNome(nome);
         }

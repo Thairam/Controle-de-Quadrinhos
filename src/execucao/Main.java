@@ -31,6 +31,25 @@ public class Main {
         ArrayList<Emprestimo> emprestimos;
         ArrayList<Amigo> amigos;
 
+        String login;
+        String senha;
+        boolean permissao = false;
+
+        do {
+            System.out.println("*** INFORME SUAS CREDENCIAIS DE ACESSO ***");
+            System.out.print("Login: ");
+            login = sc.nextLine();
+            System.out.print("Senha: ");
+            senha = sc.nextLine();
+            if ("admin".equals(login) && "admin".equals(senha)) {
+                permissao = true;
+            }
+            System.out.println((permissao ? "* Suas credenciais foram autenticadas com sucesso! *"
+                    : "* Dados inválidos, por favor informe suas credenciais corretamente! *") + "\n");
+        } while (!permissao);
+
+        System.out.println("*** BEM VINDO AO CONTROLE DE QUADRINHOS ***");
+
         while (true) {
             int opcao = 0;
 
@@ -576,11 +595,7 @@ public class Main {
                     }
 
                     break;
-
                 case 4:
-                    // Coleções
-                    break;
-                case 5:
                     // Endereços
                     while (opcao != 0) {
                         enderecos = enderecoControl.listarTodosOsEnderecos();
@@ -727,6 +742,13 @@ public class Main {
 
                     }
                     break;
+                case 5:
+                    // Coleções
+                    System.out.println("\n********************************************************");
+                    System.out.println("*** Atualmente o recurso (Coleção) está indísponível ***");
+                    System.out.println("********************************************************");
+                    break;
+
             }
         }
     }

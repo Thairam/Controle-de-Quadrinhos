@@ -12,7 +12,7 @@ public class Menu {
 
     public static void menuPrincipal() {
         System.out.println("\n***** MENU PRINCIPAL *****");
-        System.out.println("1: Amigos\n2: Quadrinhos\n3: Empréstimo\n4: Coleções\n5: Endereços\n0: Finalizar\n");
+        System.out.println("1: Amigos\n2: Quadrinhos\n3: Empréstimo\n4: Endereços\n5: Coleções\n0: Finalizar\n");
     }
 
     public static void menuPrincipalAmigos() {
@@ -30,6 +30,12 @@ public class Menu {
         System.out.println("1: Adicionar quadrinho\n2: Atualizar quadrinho\n3: "
                 + "Listar quadrinhos\n4: Buscar quadrinho pelo nome\n"
                 + "0: Voltar\n");
+    }
+
+    public static void menuPrincipalColecoes() {
+        System.out.println("\n****** MENU COLEÇÕES ******");
+        System.out.println("1: Adicionar coleção\n2: Atualizar coleção\n3: "
+                + "Listar coleções\n0: Voltar\n");
     }
 
     public static void menuPrincipalEmprestimos() {

@@ -20,7 +20,7 @@ public class ColecaoDao<T> extends Dao<T> {
 
         return ((T) new Colecao(resultSet.getInt("id"),
                 resultSet.getString("nome"),
-                resultSet.getInt("qtd_quadrinhos")
+                resultSet.getInt("tam_total")
         ));
     }
 
