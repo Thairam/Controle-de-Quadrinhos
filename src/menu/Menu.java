@@ -28,7 +28,7 @@ public class Menu {
     public static void menuPrincipalQuadrinhos() {
         System.out.println("\n****** MENU QUADRINHO ******");
         System.out.println("1: Adicionar quadrinho\n2: Atualizar quadrinho\n3: "
-                + "Listar quadrinhos\n4: Excluir quadrinho\n5: Buscar quadrinho pelo nome\n"
+                + "Listar quadrinhos\n4: Buscar quadrinho pelo nome\n"
                 + "0: Voltar\n");
     }
 
@@ -87,12 +87,12 @@ public class Menu {
         }
     }
 
-    public static void apresentarEmprestimos(ArrayList<Emprestimo> emprestimos, String msg1, String msg2) {
+    public static void apresentarEmprestimos(ArrayList<Emprestimo> emprestimos, String msg1, String msg2, String msg3) {
         if (emprestimos.isEmpty()) {
-            System.out.println("\n** Nenhum empréstimo registrado! **");
+            System.out.println(msg1);
         } else {
             System.out.println("\n*** LISTA DE EMPRÈSTIMOS ***");
-            System.out.println(msg1);
+            System.out.println(msg2);
             for (Emprestimo emprestimo : emprestimos) {
                 System.out.println(
                         "(" + (emprestimos.indexOf(emprestimo) + 1) + "): "
@@ -101,8 +101,8 @@ public class Menu {
                         + " || Data da devolução: " + Utils.calendToString(emprestimo.getDataDevolucao())
                         + " || O empréstimo está: " + emprestimo.getEstado());
             }
-            System.out.println(msg2);
         }
+        System.out.println(msg3);
     }
 
     public static void apresentarAmigo(HashMap<Boolean, Object> resultAmigo) {

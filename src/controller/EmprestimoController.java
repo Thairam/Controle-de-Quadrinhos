@@ -3,6 +3,7 @@ package controller;
 import dao.EmprestimoDao;
 import dao.Dao;
 import dao.ItemDao;
+import dao.QuadrinhoDao;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +22,9 @@ import model.Utils;
 public class EmprestimoController {
 
     Dao<Emprestimo> daoEmprestimo = new EmprestimoDao<>();
+    Dao<Quadrinho> daoQuadrinho = new QuadrinhoDao<>();
     Dao<Item> daoItem = new ItemDao<>();
+
     Item itemEmprestimo;
 
     public HashMap<Boolean, Object> efetuarEmprestimo(HashMap<Quadrinho, String> quadrinhosE, Amigo amigo, String dataDevolucao) {
@@ -58,12 +61,45 @@ public class EmprestimoController {
         HashMap<Boolean, Object> resposta = new HashMap<Boolean, Object>();
 
         try {
+            ArrayList<Quadrinho> quadrinhos = daoQuadrinho.query("SELECT DISTINCT Q.id, Q.id_colecao, Q.nome, Q.valor, "
+                    + "Q.editora, Q.isbn, Q.versao_fisica, Q.versao_digital, Q.edicao, Q.genero, "
+                    + "Q.disponibilidadeF, Q.disponibilidadeD, Q.curiosidade, Q.nota, Q.recomendavel "
+                    + "FROM quadrinho Q INNER JOIN item I "
+                    + "ON Q.id = I.id_quadrinho INNER JOIN emprestimo ON I.id_emprestimo = "
+                    + emprestimo.getId() + ";");
+
+            ArrayList<Item> itens = daoItem.query("SELECT DISTINCT I.id, I.id_emprestimo, I.id_quadrinho, "
+                    + "I.versao FROM item I INNER JOIN emprestimo "
+                    + "ON I.id_emprestimo = " + emprestimo.getId() + ";");
+
+            // Ambas as versões do mesmo quadrinho podem fazer parte do mesmo empréstimo!
+            for (int i = 0; i < quadrinhos.size(); i++) {
+                if (itens.get(i).getVersao().equals("F")) {
+                    quadrinhos.get(i).setDisponibilidadeFisica(true);
+                } else {
+                    quadrinhos.get(i).setDisponibilidadeDigital(true);
+                }
+                for (int j = (i + 1); j < quadrinhos.size(); j++) {
+                    if (quadrinhos.get(i).getId() == quadrinhos.get(j).getId()) {
+                        if (itens.get(j).getVersao().equals("F")) {
+                            quadrinhos.get(j).setDisponibilidadeFisica(true);
+                        } else {
+                            quadrinhos.get(j).setDisponibilidadeDigital(true);
+                        }
+                    }
+                }
+            }
+
+            for (Quadrinho quadrinho : quadrinhos) {
+                daoQuadrinho.update(quadrinho);
+            }
+
             emprestimo.setEstado("FECHADO");
             daoEmprestimo.update(emprestimo);
             resposta.put(Boolean.TRUE, "\nDevolução efetuada com sucesso!");
             return resposta;
         } catch (Exception e) {
-            resposta.put(Boolean.FALSE, "\nErro ao efetuar devolução!");
+            resposta.put(Boolean.FALSE, "\nErro ao efetuar devolução, por favor tente novamente!");
             return resposta;
         }
     }
@@ -73,6 +109,17 @@ public class EmprestimoController {
 
         try {
             lista = daoEmprestimo.query("SELECT * FROM EMPRESTIMO");
+        } catch (Exception e) {
+            return lista;
+        }
+        return lista;
+    }
+
+    public ArrayList<Emprestimo> listarTodosOsEmprestimosDisponiveis() {
+        ArrayList<Emprestimo> lista = new ArrayList<>();
+
+        try {
+            lista = daoEmprestimo.query("SELECT * FROM emprestimo E WHERE E.estado = 'ABERTO'");
         } catch (Exception e) {
             return lista;
         }

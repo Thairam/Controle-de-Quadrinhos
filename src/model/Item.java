@@ -66,9 +66,8 @@ public class Item extends Object implements Entity {
 
     @Override
     public String getValues() {
-        return this.id + "<"
-                + this.emprestimo.getId() + ","
-                + this.quadrinho.getId() + ","
+        return emprestimo.getId() + ", "
+                + quadrinho.getId() + ", "
                 + Utils.quotedStr(this.getVersao());
     }
 

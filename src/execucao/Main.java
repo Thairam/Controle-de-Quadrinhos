@@ -210,7 +210,7 @@ public class Main {
                             } catch (NumberFormatException e) {
                                 System.out.println("Digite uma opção válida!");
                             }
-                        } while (opcao < 0 || opcao > 5);
+                        } while (opcao < 0 || opcao > 4);
 
                         switch (opcao) {
                             case 0:
@@ -398,33 +398,6 @@ public class Main {
                                 break;
 
                             case 4:
-                                // Excluir quadrinho
-                                Menu.apresentarQuadrinhos(quadrinhos, "", "");
-                                opcaoQuadrinho = 0;
-                                do {
-                                    System.out.println("** Informe o quadrinho que será "
-                                            + "deletado **\n** Digite 0"
-                                            + " para sair!  **");
-                                    try {
-                                        opcaoQuadrinho = Integer.parseInt(sc.nextLine());
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("Digite uma opção válida!");
-                                    }
-                                } while (opcaoQuadrinho < 0 || opcaoQuadrinho > quadrinhos.size());
-
-                                if (opcaoQuadrinho == 0) {
-                                    break;
-                                }
-
-                                resultQuadrinho = quadrinhoControl
-                                        .deletarQuadrinho(quadrinhos.get(opcaoQuadrinho - 1));
-
-                                System.out.println(resultQuadrinho.containsKey(true)
-                                        ? resultQuadrinho.get(true)
-                                        : resultQuadrinho.get(false));
-
-                                break;
-                            case 5:
                                 // Buscar quadrinho pelo nome
                                 System.out.println("Informe o nome do quadrinho: ");
                                 String nome = sc.nextLine();
@@ -567,11 +540,13 @@ public class Main {
 
                             case 2:
                                 // Efetuar devolução
+                                emprestimos = emprestimoControl.listarTodosOsEmprestimosDisponiveis();
                                 try {
                                     do {
-                                        String msg1 = "** Informe o empréstimo que será devolvido **\n";
-                                        String msg2 = "\n** Para cancelar digite 0 **";
-                                        Menu.apresentarEmprestimos(emprestimos, msg1, msg2);
+                                        String msg1 = "\n** Nenhum empréstimo registrado! **";
+                                        String msg2 = "** Informe o empréstimo que será devolvido **\n";
+                                        String msg3 = "\n** Para cancelar digite 0 **";
+                                        Menu.apresentarEmprestimos(emprestimos, msg1, msg2, msg3);
                                         System.out.print("opcao: ");
                                         opcao = Integer.parseInt(sc.nextLine());
                                     } while (opcao < 0 || opcao > emprestimos.size());
@@ -579,8 +554,12 @@ public class Main {
                                     if (opcao == 0) {
                                         break;
                                     }
-                                    
-                                    
+
+                                    resultEmprestimo = emprestimoControl.efetuarDevolucao(emprestimos.get(opcao - 1));
+
+                                    System.out.println(resultEmprestimo.containsKey(true)
+                                            ? resultEmprestimo.get(true)
+                                            : resultEmprestimo.get(false));
 
                                 } catch (NumberFormatException e) {
                                     System.out.println("\nDa próxima vez, digite uma opção válida!");
@@ -590,7 +569,8 @@ public class Main {
                                 break;
                             case 3:
                                 // listar empréstimos
-                                Menu.apresentarEmprestimos(emprestimos, "", "");
+                                String msg1 = "\n** Nenhum empréstimo registrado! **";
+                                Menu.apresentarEmprestimos(emprestimos, msg1, "", "");
                                 break;
                         }
                     }

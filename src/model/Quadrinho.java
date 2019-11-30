@@ -181,8 +181,9 @@ public class Quadrinho extends Object implements Entity {
         return "id_colecao, nome, valor, editora, isbn, versao_fisica, versao_digital, edicao, genero, disponibilidadeF, disponibilidadeD, curiosidade, nota, recomendavel";
     }
 
+    @Override
     public String getValues() {
-        return (colecao != null ? colecao.getId() : "null") + ","
+        return (colecao != null ? colecao.getId() : "null") + ", "
                 + Utils.quotedStr(getNome()) + ","
                 + getValor() + ","
                 + Utils.quotedStr(getEditora()) + ","
