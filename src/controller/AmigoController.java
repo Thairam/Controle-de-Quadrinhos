@@ -114,7 +114,7 @@ public class AmigoController {
 
         AmigoController.camposInvalidos = new ArrayList<>();
 
-        if (!nome.matches(AmigoER.ER_NOME)) {
+        if (!nome.matches(AmigoER.ER_NOME) || nome.contains("null")) {
             AmigoController.camposInvalidos.add("nome");
         }
         if (!dataNasc.matches(AmigoER.ER_DATA_NASCIMENTO)) {
@@ -133,7 +133,7 @@ public class AmigoController {
         return AmigoController.camposInvalidos.isEmpty();
     }
 
-    public static boolean verificarCamposAtualizacao(String nome, String dataNasc, String cpf, String fone, String email) {
+    public static boolean verificarCamposAtualizacao(Amigo amigo, String nome, String dataNasc, String cpf, String fone, String email) {
 
         AmigoController.camposInvalidos = new ArrayList<>();
 
@@ -153,7 +153,29 @@ public class AmigoController {
             AmigoController.camposInvalidos.add("email");
         }
 
-        return AmigoController.camposInvalidos.isEmpty();
+        if (camposInvalidos.isEmpty()) {
+            definirAtributosAmigo(amigo, nome, dataNasc, cpf, fone, email);
+        }
+
+        return camposInvalidos.isEmpty();
+    }
+
+    private static void definirAtributosAmigo(Amigo amigo, String nome, String dataNascimento, String cpf, String fone, String email) {
+        if (!"".equals(nome)) {
+            amigo.setNome(nome);
+        }
+        if (!"".equals(dataNascimento)) {
+            amigo.setDataNascimento(Utils.stringToCalend(dataNascimento));
+        }
+        if (!"".equals(cpf)) {
+            amigo.setCpf(cpf);
+        }
+        if (!"".equals(fone)) {
+            amigo.setFone(fone);
+        }
+        if (!"".equals(email)) {
+            amigo.setEmail(email);
+        }
     }
 
     private static boolean verificarAmigo(Amigo amigo) {

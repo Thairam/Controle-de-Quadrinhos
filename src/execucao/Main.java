@@ -68,10 +68,11 @@ public class Main {
                     System.exit(0);
                 case 1:
                     // Amigos
-                    enderecos = enderecoControl.listarTodosOsEnderecos();
-                    amigos = amigoControl.listarTodosOsAmigos();
 
                     while (opcao != 0) {
+                        enderecos = enderecoControl.listarTodosOsEnderecos();
+                        amigos = amigoControl.listarTodosOsAmigos();
+
                         do {
                             Menu.menuPrincipalAmigos();
                             try {
@@ -88,7 +89,7 @@ public class Main {
                                     // Adicionar amigo
                                     System.out.println(" *** Insira os dados do amigo ***");
 
-                                    System.out.println("Nome(Ao menos 3 letras): ");
+                                    System.out.println("Nome: ");
                                     String nome = sc.nextLine();
 
                                     System.out.println("Data de nascimento(00/00/0000): ");
@@ -106,7 +107,7 @@ public class Main {
                                     int opEndereco = 0;
 
                                     String mensagem1 = "Escolha um dos endereços: ";
-                                    String mensagem2 = "Digite 0 para sair!";
+                                    String mensagem2 = "Opção(Digite 0 para sair): ";
 
                                     do {
                                         Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
@@ -125,12 +126,14 @@ public class Main {
                                     resultAmigo = amigoControl.salvarAmigo(endereco, nome, dataNascimento, cpf, fone, email);
 
                                     System.out.println(resultAmigo.containsKey(true)
-                                            ? "Amigo cadastrado com sucesso" : resultAmigo.get(false));
+                                            ? "** Amigo cadastrado com sucesso **"
+                                            : "\n* Foram fornecidos valores inválidos para os seguintes campos: \n"
+                                            + resultAmigo.get(false));
 
                                     break;
                                 case 2:
                                     // Atualizar amigo
-                                    System.out.println("Informe o cpf do amigo(111.111.111-00): ");
+                                    System.out.println("Informe o cpf do amigo(111.111.111-00) que será atualizado: ");
                                     cpf = sc.nextLine();
                                     resultAmigo = amigoControl.buscarAmigoPeloCpf(cpf);
                                     Menu.apresentarAmigo(resultAmigo);
@@ -167,24 +170,9 @@ public class Main {
                                         } while (opEndereco < 0 || opEndereco > enderecos.size());
 
                                         boolean camposValidos = amigoControl
-                                                .verificarCamposAtualizacao(nome, dataNascimento, cpf, fone, email);
+                                                .verificarCamposAtualizacao(amigo, nome, dataNascimento, cpf, fone, email);
 
                                         if (camposValidos) {
-                                            if (!"".equals(nome)) {
-                                                amigo.setNome(nome);
-                                            }
-                                            if (!"".equals(dataNascimento)) {
-                                                amigo.setDataNascimento(Utils.stringToCalend(dataNascimento));
-                                            }
-                                            if (!"".equals(cpf)) {
-                                                amigo.setCpf(cpf);
-                                            }
-                                            if (!"".equals(fone)) {
-                                                amigo.setFone(fone);
-                                            }
-                                            if (!"".equals(email)) {
-                                                amigo.setEmail(email);
-                                            }
                                             if (opEndereco != 0) {
                                                 amigo.setEndereco(enderecos.get(opEndereco - 1));
                                             }
@@ -193,17 +181,19 @@ public class Main {
                                                     .atualizarAmigo(amigo);
 
                                             System.out.println(resultAtualizacaoAmigo.containsKey(true)
-                                                    ? "Amigo atualizado com sucesso"
+                                                    ? "\n** Amigo atualizado com sucesso **"
                                                     : "(*) Os campos a seguir foram fornecidos com valores inválidos: \n(*) "
                                                     + resultAmigo.get(false) + ".\n");
                                         } else {
-                                            System.out.println("Dados inválidos!");
+                                            System.out.println("\n*** Dados inválidos, foram inseridos ao tentar "
+                                                    + "atualizar o amigo ***");
                                         }
                                     }
 
                                     break;
                                 case 3:
-                                    Menu.apresentarAmigos(amigos);
+                                    String mensagem = "\n***** AMIGOS *****";
+                                    Menu.apresentarAmigos(amigos, mensagem);
                                     break;
                                 case 4:
                                     // Buscar amigo pelo cpf
@@ -528,7 +518,7 @@ public class Main {
 
                                         System.out.println("\n** INFORMAR AMIGO **");
                                         do {
-                                            Menu.apresentarAmigos(amigos);
+                                            Menu.apresentarAmigos(amigos, "");
                                             System.out.print("Informe o amigo (digite 0 para cancelar): ");
                                             opcao = Integer.parseInt(sc.nextLine());
                                         } while (opcao < 0 || opcao > amigos.size());
@@ -542,10 +532,11 @@ public class Main {
                                         resultEmprestimo = emprestimoControl
                                                 .efetuarEmprestimo(quadrinhosEmprestimo, amigo, dataDevolucao);
 
-                                        System.out.println(resultEmprestimo.containsKey(true)
-                                                ? "\n" + "Empréstimo efetuado com sucesso!\n"
-                                                : "\n" + resultEmprestimo.get(false)
-                                        );
+                                        if (resultEmprestimo.containsKey(true)) {
+                                            Menu.apresentarComprovanteEmprestimo(((Emprestimo) resultEmprestimo.get(true)));
+                                        } else {
+                                            System.out.println("\n" + resultEmprestimo.get(false));
+                                        }
 
                                         break;
 
@@ -562,7 +553,7 @@ public class Main {
                                 emprestimos = emprestimoControl.listarTodosOsEmprestimosDisponiveis();
                                 try {
                                     do {
-                                        String msg1 = "\n** Nenhum empréstimo registrado! **";
+                                        String msg1 = "\n** Nenhum empréstimo registrado **";
                                         String msg2 = "** Informe o empréstimo que será devolvido **\n";
                                         String msg3 = "\n** Para cancelar digite 0 **";
                                         Menu.apresentarEmprestimos(emprestimos, msg1, msg2, msg3);
@@ -576,9 +567,11 @@ public class Main {
 
                                     resultEmprestimo = emprestimoControl.efetuarDevolucao(emprestimos.get(opcao - 1));
 
-                                    System.out.println(resultEmprestimo.containsKey(true)
-                                            ? resultEmprestimo.get(true)
-                                            : resultEmprestimo.get(false));
+                                    if (resultEmprestimo.containsKey(true)) {
+                                        Menu.apresentarComprovanteDevolucao(((Emprestimo) resultEmprestimo.get(true)));
+                                    } else {
+                                        System.out.println("\n" + resultEmprestimo.get(false));
+                                    }
 
                                 } catch (NumberFormatException e) {
                                     System.out.println("\nDa próxima vez, digite uma opção válida!");
@@ -603,6 +596,7 @@ public class Main {
                         do {
                             Menu.menuPrincipalEnderecos();
                             try {
+                                System.out.print("Digite uma das opções: ");
                                 opcao = Integer.parseInt(sc.nextLine());
                             } catch (NumberFormatException e) {
                                 System.out.println("Digite uma opção válida!");
@@ -632,7 +626,7 @@ public class Main {
                                 resultEndereco = enderecoControl.salvarEndereco(rua, bairro, cidade, uf, cep);
 
                                 System.out.println(resultEndereco.containsKey(true)
-                                        ? "Endereço cadastrado com sucesso"
+                                        ? "\n*** Endereço cadastrado com sucesso ***\n"
                                         : "(*) Os campos a seguir foram fornecidos com valores inválidos: \n(*) "
                                         + resultEndereco.get(false) + ".\n");
                                 break;
@@ -641,8 +635,8 @@ public class Main {
 
                                 int opEndereco = 0;
 
-                                String mensagem1 = "Informe o endereço a ser atualizado: ";
-                                String mensagem2 = "Digite 0 para cancelar!";
+                                String mensagem1 = "*** Informe o endereço a ser atualizado ***";
+                                String mensagem2 = "Opção(Digite 0 para cancelar): ";
                                 do {
                                     Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
                                     try {
@@ -678,31 +672,16 @@ public class Main {
                                 cep = sc.nextLine();
 
                                 boolean camposValidos = enderecoControl
-                                        .verificarCamposAtualizacao(rua, bairro, cidade, uf, cep);
+                                        .verificarCamposAtualizacao(endereco, rua, bairro, cidade, uf, cep);
 
                                 if (camposValidos) {
-                                    if (!"".equals(rua)) {
-                                        endereco.setRua(rua);
-                                    }
-                                    if (!"".equals(bairro)) {
-                                        endereco.setBairro(bairro);
-                                    }
-                                    if (!"".equals(cidade)) {
-                                        endereco.setCidade(cidade);
-                                    }
-                                    if (!"".equals(uf)) {
-                                        endereco.setUf(uf);
-                                    }
-                                    if (!"".equals(cep)) {
-                                        endereco.setCep(cep);
-                                    }
 
                                     HashMap<Boolean, Object> resultAtualizacaoEndereco
                                             = enderecoControl.atualizarEndereco(endereco);
 
                                     System.out.println(resultAtualizacaoEndereco.containsKey(true)
-                                            ? "Endereço atualizado com sucesso\n"
-                                            : "Já existe um registro com o mesmo cep!\n");
+                                            ? "\n*** Endereço atualizado com sucesso ***\n"
+                                            : "\n*** Já existe um registro com o mesmo cep ***\n");
                                 } else {
                                     System.out.println("Dados inválidos!\n");
                                 }
@@ -711,12 +690,13 @@ public class Main {
 
                             case 3:
                                 // Listar endereços
-                                Menu.apresentarEnderecos(enderecos, "", "");
+                                String msg1 = "**** ENDEREÇOS ***";
+                                Menu.apresentarEnderecos(enderecos, msg1, "");
                                 break;
                             case 4:
                                 // Excluir endereço
-                                mensagem1 = "Informe o endereço a ser deletado: ";
-                                mensagem2 = "Digite 0 para cancelar!";
+                                mensagem1 = "*** Informe o endereço a ser deletado ***";
+                                mensagem2 = "Opção(Digite 0 para cancelar): ";
                                 opEndereco = 0;
                                 do {
                                     Menu.apresentarEnderecos(enderecos, mensagem1, mensagem2);
@@ -734,7 +714,7 @@ public class Main {
                                 boolean result = enderecoControl.deletarEndereco(enderecos.get(opEndereco - 1));
 
                                 System.out.println(result
-                                        ? "Endereço deletado com sucesso!" : "Falha na operação!");
+                                        ? "\n*** Endereço deletado com sucesso ***" : "\n*** Falha na operação ***");
 
                                 break;
 

@@ -113,7 +113,7 @@ public class EnderecoController {
         return EnderecoController.camposInvalidos.isEmpty();
     }
 
-    public static boolean verificarCamposAtualizacao(String rua, String bairro, String cidade, String uf, String cep) {
+    public static boolean verificarCamposAtualizacao(Endereco endereco, String rua, String bairro, String cidade, String uf, String cep) {
 
         EnderecoController.camposInvalidos = new ArrayList<>();
 
@@ -133,7 +133,29 @@ public class EnderecoController {
             EnderecoController.camposInvalidos.add("cep");
         }
 
+        if (camposInvalidos.isEmpty()) {
+            definirAtributosEndereco(endereco, rua, bairro, cidade, uf, cep);
+        }
+
         return EnderecoController.camposInvalidos.isEmpty();
+    }
+
+    private static void definirAtributosEndereco(Endereco endereco, String rua, String bairro, String cidade, String uf, String cep) {
+        if (!"".equals(rua)) {
+            endereco.setRua(rua);
+        }
+        if (!"".equals(bairro)) {
+            endereco.setBairro(bairro);
+        }
+        if (!"".equals(cidade)) {
+            endereco.setCidade(cidade);
+        }
+        if (!"".equals(uf)) {
+            endereco.setUf(uf);
+        }
+        if (!"".equals(cep)) {
+            endereco.setCep(cep);
+        }
     }
 
     private static boolean verificarEndereco(Endereco endereco) {

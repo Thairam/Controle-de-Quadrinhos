@@ -92,7 +92,7 @@ public class TesteDaoAmigo {
     @Test
     public void ListarTodosOsAmigos() throws SQLException, Exception {
         ArrayList<Amigo> lista = amigoControl.listarTodosOsAmigos();
-        assertEquals(lista.size() >= 3, true); // 3 amigos foram registrados na criação do banco.
+        assertEquals(lista.size() >= 1, true);
     }
 
     @Test

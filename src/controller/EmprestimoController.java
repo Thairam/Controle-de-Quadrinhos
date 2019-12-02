@@ -97,7 +97,7 @@ public class EmprestimoController {
 
             emprestimo.setEstado("FECHADO");
             daoEmprestimo.update(emprestimo);
-            resposta.put(Boolean.TRUE, "\nDevolução efetuada com sucesso!");
+            resposta.put(Boolean.TRUE, emprestimo);
             return resposta;
         } catch (Exception e) {
             resposta.put(Boolean.FALSE, "\nErro ao efetuar devolução, por favor tente novamente!");

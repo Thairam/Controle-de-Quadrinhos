@@ -43,11 +43,11 @@ public class Menu {
         System.out.println("1: Efetuar empréstimo\n2: Efetuar devolução\n3: Listar empréstimos\n0: Voltar\n");
     }
 
-    public static void apresentarAmigos(ArrayList<Amigo> amigos) {
+    public static void apresentarAmigos(ArrayList<Amigo> amigos, String mensagem) {
         if (amigos.isEmpty()) {
-            System.out.println("Nenhum amigo registrado!");
+            System.out.println("\n*** Nenhum amigo registrado ***");
         } else {
-            System.out.println("");
+            System.out.println(mensagem);
             for (Amigo amigo : amigos) {
                 System.out.println(
                         "(" + (amigos.indexOf(amigo) + 1) + "): "
@@ -61,16 +61,16 @@ public class Menu {
 
     public static void apresentarEnderecos(ArrayList<Endereco> enderecos, String msg1, String msg2) {
         if (enderecos.isEmpty()) {
-            System.out.println("Nenhum endereço registrado!");
+            System.out.println("\n*** Nenhum endereço registrado ***");
         } else {
             System.out.println(msg1);
             for (int i = 0; i < enderecos.size(); i++) {
-                System.out.println((i + 1) + ":" + enderecos.get(i).getCidade() + " - "
+                System.out.println((i + 1) + ": " + enderecos.get(i).getCidade() + " - "
                         + enderecos.get(i).getRua() + " - " + enderecos.get(i).getBairro() + " - "
                         + enderecos.get(i).getCep() + " - " + enderecos.get(i).getUf());
             }
-            System.out.print("\n" + msg2);
         }
+        System.out.print("\n" + msg2);
     }
 
     public static void apresentarQuadrinhos(ArrayList<Quadrinho> quadrinhos, String msg1, String msg2) {
@@ -114,11 +114,12 @@ public class Menu {
     public static void apresentarAmigo(HashMap<Boolean, Object> resultAmigo) {
         if (resultAmigo.containsKey(true)) {
             Amigo amigo = (Amigo) resultAmigo.get(true);
+            System.out.println("\n***** AMIGO *****");
             System.out.println("Nome: " + amigo.getNome() + " || Cpf: " + amigo.getCpf()
                     + " || Data de Nascimento: " + Utils.calendToString(amigo.getDataNascimento())
                     + " || Email: " + amigo.getEmail() + "\n");
         } else {
-            System.out.println(resultAmigo.get(false) + "\n");
+            System.out.println("\n*** " + resultAmigo.get(false) + " ***\n");
         }
     }
 
@@ -144,6 +145,21 @@ public class Menu {
             System.out.println(resultQuadrinho.get(false) + "\n");
         }
 
+    }
+
+    public static void apresentarComprovanteEmprestimo(Emprestimo emprestimo) {
+        System.out.println("\n*** COMPROVANTE DO EMPRÉSTIMO ***");
+        System.out.println("Empréstimo efetuado para: " + emprestimo.getAmigo().getNome());
+        System.out.println("Data do empréstimo: " + Utils.calendToString(emprestimo.getDataEmprestimo()));
+        System.out.println("Data da devolução: " + Utils.calendToString(emprestimo.getDataDevolucao()) + "\n");
+    }
+
+    public static void apresentarComprovanteDevolucao(Emprestimo emprestimo) {
+        System.out.println("\n*** COMPROVANTE DA DEVOLUÇÃO ***");
+        System.out.println("Amigo: " + emprestimo.getAmigo().getNome());
+        System.out.println("Data do empréstimo: " + Utils.calendToString(emprestimo.getDataEmprestimo()));
+        System.out.println("Data da devolução: " + Utils.calendToString(emprestimo.getDataDevolucao()) + "\n");
+        System.out.println("*** DEVOLUÇÃO EFETUADA COM SUCESSO ***\n");
     }
 
     public static void apresentarQuadrinhosDisponiveis(ArrayList<Quadrinho> quadrinhos, String msg1, String msg2) {
