@@ -11,7 +11,7 @@ public class Item extends Object implements Entity {
     private int id;
     private Emprestimo emprestimo;
     private Quadrinho quadrinho;
-    private String versao; // 0 - Fisica e 1 - Digital
+    private String versao;
 
     public Item() {
     }

@@ -5,7 +5,6 @@ import dao.Dao;
 import expressoes_regulares.QuadrinhoER;
 import java.util.ArrayList;
 import java.util.HashMap;
-import model.Item;
 import model.Quadrinho;
 
 /**
@@ -61,7 +60,7 @@ public class QuadrinhoController {
             try {
                 definirValoresDouble(quadrinho, valor, nota);
                 verificarInclusaoDeVersoes(quadrinho, versaoFisicaS, versaoDigitalS);
-                definirCamposDoQuadrinho(quadrinho, nome, editora, isbn, edicao, genero, recomendavelS);
+                definirCamposDoQuadrinho(quadrinho, nome, editora, isbn, edicao, genero, recomendavelS, curiosidade);
                 dao.update(quadrinho);
                 resposta.put(Boolean.TRUE, quadrinho);
             } catch (Exception e) {
@@ -78,51 +77,6 @@ public class QuadrinhoController {
         }
 
         return resposta;
-    }
-
-    private void definirCamposDoQuadrinho(Quadrinho quadrinho, String nome, String editora, String isbn, String edicao, String genero, String recomendavelS) {
-        if (!"".equals(nome)) {
-            quadrinho.setNome(nome);
-        }
-        if (!"".equals(editora)) {
-            quadrinho.setEditora(editora);
-        }
-        if (!"".equals(isbn)) {
-            quadrinho.setIsbn(isbn);
-        }
-        if (!"".equals(edicao)) {
-            quadrinho.setEdicao(edicao);
-        }
-        if (!"".equals(genero)) {
-            quadrinho.setGenero(genero);
-        }
-        boolean recomendavel = "".equals(recomendavelS) ? quadrinho.isRecomendavel() : recomendavelS.contains("s");
-        quadrinho.setRecomendavel(recomendavel);
-    }
-
-    private void verificarInclusaoDeVersoes(Quadrinho quadrinho, String versaoFisicaS, String versaoDigitalS) {
-
-        boolean incluirVersaoFisica = "".equals(versaoFisicaS) ? quadrinho.isVersaoFisica() : versaoFisicaS.toLowerCase().contains("s");
-        boolean incluirVersaoDigital = "".equals(versaoDigitalS) ? quadrinho.isVersaoDigital() : versaoDigitalS.toLowerCase().contains("s");
-
-        if (!quadrinho.isVersaoFisica() && incluirVersaoFisica) {
-            quadrinho.setVersaoFisica(true);
-            quadrinho.setDisponibilidadeFisica(true);
-        }
-
-        if (!quadrinho.isVersaoDigital() && incluirVersaoDigital) {
-            quadrinho.setVersaoDigital(true);
-            quadrinho.setDisponibilidadeDigital(true);
-        }
-    }
-
-    private void definirValoresDouble(Quadrinho quadrinho, double valor, double nota) {
-        if (valor != 1111) {
-            quadrinho.setValor(valor);
-        }
-        if (nota != 0.001) {
-            quadrinho.setNota(nota);
-        }
     }
 
     public ArrayList<Quadrinho> listarTodosOsQuadrinhos() {
@@ -177,6 +131,56 @@ public class QuadrinhoController {
         } catch (Exception e) {
             resposta.put(Boolean.FALSE, "\n** Erro inesperado ao deletar o quadrinho! **");
             return resposta;
+        }
+    }
+
+    private void definirCamposDoQuadrinho(Quadrinho quadrinho, String nome, String editora, String isbn,
+            String edicao, String genero, String recomendavelS, String curiosidade) {
+
+        if (!"".equals(nome)) {
+            quadrinho.setNome(nome);
+        }
+        if (!"".equals(editora)) {
+            quadrinho.setEditora(editora);
+        }
+        if (!"".equals(isbn)) {
+            quadrinho.setIsbn(isbn);
+        }
+        if (!"".equals(edicao)) {
+            quadrinho.setEdicao(edicao);
+        }
+        if (!"".equals(genero)) {
+            quadrinho.setGenero(genero);
+        }
+        if (!"".equals(curiosidade)) {
+            quadrinho.setCuriosidade(curiosidade);
+        }
+        boolean recomendavel = "".equals(recomendavelS) ? quadrinho.isRecomendavel() : recomendavelS.contains("s");
+        quadrinho.setRecomendavel(recomendavel);
+    }
+
+    private void verificarInclusaoDeVersoes(Quadrinho quadrinho, String versaoFisicaS, String versaoDigitalS) {
+
+        boolean incluirVersaoFisica = "".equals(versaoFisicaS) ? quadrinho.isVersaoFisica() : versaoFisicaS.toLowerCase().contains("s");
+        boolean incluirVersaoDigital = "".equals(versaoDigitalS) ? quadrinho.isVersaoDigital() : versaoDigitalS.toLowerCase().contains("s");
+
+        if (!quadrinho.isVersaoFisica() && incluirVersaoFisica) {
+            quadrinho.setVersaoFisica(true);
+            quadrinho.setDisponibilidadeFisica(true);
+        }
+
+        if (!quadrinho.isVersaoDigital() && incluirVersaoDigital) {
+            quadrinho.setVersaoDigital(true);
+            quadrinho.setDisponibilidadeDigital(true);
+        }
+    }
+
+    private void definirValoresDouble(Quadrinho quadrinho, double valor, double nota) {
+        if (valor != 1111) {
+            quadrinho.setValor(valor);
+        }
+        if (nota != 0.001) {
+            quadrinho.setNota(nota);
         }
     }
 
