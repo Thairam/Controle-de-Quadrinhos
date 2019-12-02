@@ -23,15 +23,6 @@ public class TesteDaoAmigo {
     Amigo amigoMock = new Amigo();
     AmigoController amigoControl = new AmigoController();
 
-    public void configuracao() {
-        amigoMock.setNome("Malaquias");
-        amigoMock.setDataNascimento(Utils.stringToCalend("28/02/2000"));
-        amigoMock.setCpf("555.555.555-55");
-        amigoMock.setEndereco(null);
-        amigoMock.setEmail("malaquias@bytecode.com");
-        amigoMock.setFone("083 98564-0071");
-    }
-
     @Test
     public void InserirAmigoComSucesso() throws Exception {
         configuracao();
@@ -61,12 +52,13 @@ public class TesteDaoAmigo {
     @Test
     public void InserirAmigoComDadosInvalidos() throws Exception {
         // nome e cpf inválidos
-        String nome = "ab";
+        String nome = "";
         String dataNasc = "28/12/1990";
         String cpf = "05.225.547-12";
         Endereco endereco = null;
         String email = "abdias@hotmail.com";
         String fone = "021 88851-9521";
+
         HashMap<Boolean, Object> resposta = amigoControl.salvarAmigo(endereco, nome, dataNasc, cpf, fone, email);
         assertEquals(resposta.containsKey(false), true);
         String campos = (String) resposta.get(false);
@@ -80,12 +72,13 @@ public class TesteDaoAmigo {
     @Test
     public void InserirAmigoComDadosInvalidos2() throws Exception {
         // todos os campos inválidos
-        String nome = "ab";
+        String nome = "";
         String dataNasc = "2/02/2000";
         String cpf = "55.555.555-55";
         Endereco endereco = null;
         String email = "email_invalido_bytecode.com";
         String fone = "(10) 0010-0101";
+
         HashMap<Boolean, Object> resposta = amigoControl.salvarAmigo(endereco, nome, dataNasc, cpf, fone, email);
         assertEquals(resposta.containsKey(false), true);
         String campos = (String) resposta.get(false);
@@ -137,5 +130,14 @@ public class TesteDaoAmigo {
 
         Amigo amigo = (Amigo) resposta.get(true);
         assertEquals(amigo.getFone(), defaultAmigo.getFone());
+    }
+
+    public void configuracao() {
+        amigoMock.setNome("Malaquias");
+        amigoMock.setDataNascimento(Utils.stringToCalend("28/02/2000"));
+        amigoMock.setCpf("555.555.555-55");
+        amigoMock.setEndereco(null);
+        amigoMock.setEmail("malaquias@bytecode.com");
+        amigoMock.setFone("083 98564-0071");
     }
 }

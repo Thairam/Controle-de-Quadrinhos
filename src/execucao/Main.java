@@ -543,7 +543,7 @@ public class Main {
                                                 .efetuarEmprestimo(quadrinhosEmprestimo, amigo, dataDevolucao);
 
                                         System.out.println(resultEmprestimo.containsKey(true)
-                                                ? "\n" + resultEmprestimo.get(true)
+                                                ? "\n" + "Empréstimo efetuado com sucesso!\n"
                                                 : "\n" + resultEmprestimo.get(false)
                                         );
 

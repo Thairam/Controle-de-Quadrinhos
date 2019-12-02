@@ -132,14 +132,6 @@ public class testeDaoQuadrinho {
         assertEquals(resposta.size(), 4); // Por padrão é criado 3 quadrinhos, na criação do banco de dados.
     }
 
-    public void salvarQuadrinhoPadrao() {
-        HashMap<Boolean, Object> resposta1 = quadrinhoControl
-                .salvarQuadrinho(nomePadrao, valorPadrao, editoraPadrao, isbnPadrao, "s", "s", edicaoPadrao,
-                        generoPadrao, curiosidade, nota, "s");
-
-        quadrinhoPadrao = (Quadrinho) resposta1.get(true);
-    }
-
     @Test
     public void buscarQuadrinhoPeloNome() {
         salvarQuadrinhoPadrao();
@@ -163,6 +155,14 @@ public class testeDaoQuadrinho {
         HashMap<Boolean, Object> resposta = quadrinhoControl.deletarQuadrinho(quadrinhoPadrao);
         assertEquals(resposta.containsKey(true), true);
         assertEquals(((String) resposta.get(true)).contains("Quadrinho deletado com sucesso"), true);
+    }
+
+    public void salvarQuadrinhoPadrao() {
+        HashMap<Boolean, Object> resposta1 = quadrinhoControl
+                .salvarQuadrinho(nomePadrao, valorPadrao, editoraPadrao, isbnPadrao, "s", "s", edicaoPadrao,
+                        generoPadrao, curiosidade, nota, "s");
+
+        quadrinhoPadrao = (Quadrinho) resposta1.get(true);
     }
 
 }

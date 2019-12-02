@@ -27,7 +27,8 @@ public class EmprestimoController {
 
     Item itemEmprestimo;
 
-    public HashMap<Boolean, Object> efetuarEmprestimo(HashMap<Quadrinho, String> quadrinhosE, Amigo amigo, String dataDevolucao) {
+    public HashMap<Boolean, Object> efetuarEmprestimo(HashMap<Quadrinho, String> quadrinhosE, Amigo amigo,
+            String dataDevolucao) {
         HashMap<Boolean, Object> resultadoData;
         HashMap<Boolean, Object> resposta = new HashMap<Boolean, Object>();
 
@@ -48,9 +49,9 @@ public class EmprestimoController {
                 itemEmprestimo = new Item(emprestimo, quadrinho, quadrinhosE.get(quadrinho));
                 daoItem.insert(itemEmprestimo);
             }
-            resposta.put(Boolean.TRUE, "Empréstimo efetuado com sucesso!\n");
+            resposta.put(Boolean.TRUE, emprestimo);
         } catch (Exception e) {
-            resposta.put(Boolean.FALSE, e.getMessage());
+            resposta.put(Boolean.FALSE, "Erro Inesperado ao efetuar o empréstimo, por favor tente novamente!");
             return resposta;
         }
 
@@ -113,6 +114,15 @@ public class EmprestimoController {
             return lista;
         }
         return lista;
+    }
+
+    public boolean deletarEmprestimo(Emprestimo emprestimo) {
+        try {
+            daoEmprestimo.delete(emprestimo);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public ArrayList<Emprestimo> listarTodosOsEmprestimosDisponiveis() {

@@ -4,10 +4,9 @@ import model.*;
 import dao.*;
 import controller.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
+import static junit.framework.Assert.assertEquals;
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -23,70 +22,141 @@ public class TesteDaoEmprestimo {
     ArrayList<Quadrinho> quadrinhos;
     ArrayList<Amigo> amigos;
 
+    Amigo amigoPadrao = new Amigo();
+    Quadrinho quadrinhoPadrao = new Quadrinho();
+    Emprestimo emprestimoPadrao = new Emprestimo();
+
     QuadrinhoController quadrinhoControl = new QuadrinhoController();
     AmigoController amigoControl = new AmigoController();
     EmprestimoController emprestimoControl = new EmprestimoController();
 
+    String dataDevolucaoPadraoS = "25/12/2019";
+
+    @After
+    public void limparEmprestimo() {
+        emprestimoControl.deletarEmprestimo(emprestimoPadrao);
+        amigoControl.deletarAmigo(amigoPadrao);
+        quadrinhoControl.deletarQuadrinho(quadrinhoPadrao);
+    }
+
     @Test
-    public void testeQueryEmprestimo() throws Exception {
-        HashMap<Boolean, Object> resultQuadrinho = quadrinhoControl.buscarQuadrinhoPeloNome("Batman");
-        Quadrinho quadrinho = (Quadrinho) resultQuadrinho.get(true);
+    public void emprestimoComSucesso() {
+        preCondicoesEmprestimo();
+        HashMap<Quadrinho, String> quadrinhosEmprestimo = new HashMap<Quadrinho, String>();
+        quadrinhosEmprestimo.put(quadrinhoPadrao, "F"); //(F) versão física do quadrinho
 
-        HashMap<Boolean, Object> resultAmigo = amigoControl.buscarAmigoPeloID(1);
-        Amigo amigo = (Amigo) resultAmigo.get(true);
+        HashMap<Boolean, Object> resposta
+                = emprestimoControl.efetuarEmprestimo(quadrinhosEmprestimo, amigoPadrao, dataDevolucaoPadraoS);
 
-        Calendar dataEmprestimo = new GregorianCalendar();
-        dataEmprestimo.setTime(new Date());
+        emprestimoPadrao = (Emprestimo) resposta.get(true);
+        assertEquals(resposta.containsKey(true), true);
+        assertEquals(((Emprestimo) resposta.get(true)).getAmigo(), amigoPadrao);
+        assertEquals(((Emprestimo) resposta.get(true)).getEstado(), "ABERTO");
+        assertEquals(((Emprestimo) resposta.get(true)).getDataDevolucao(), Utils.stringToCalend(dataDevolucaoPadraoS));
+    }
 
-        Calendar dataDevolucao;
-        dataDevolucao = Utils.stringToCalend("25/12/2019");
+    @Test
+    public void dataComFormatoInvalido() {
+        preCondicoesEmprestimo();
+        HashMap<Quadrinho, String> quadrinhosEmprestimo = new HashMap<Quadrinho, String>();
+        quadrinhosEmprestimo.put(quadrinhoPadrao, "F");
 
-        Calendar dataDevolucao2;
-        dataDevolucao2 = Utils.stringToCalend("30/12/2019");
+        String dataDevolucaoInvalida = "1/01/2050"; // formato de data inválido para a aplicação
 
-        String estado = "ABERTO";
+        HashMap<Boolean, Object> resposta
+                = emprestimoControl.efetuarEmprestimo(quadrinhosEmprestimo, amigoPadrao, dataDevolucaoInvalida);
 
-        Emprestimo emprestimo = new Emprestimo(amigo, dataEmprestimo, dataDevolucao, estado);
-        Emprestimo emprestimo2 = new Emprestimo(amigo, dataEmprestimo, dataDevolucao2, estado);
+        emprestimoPadrao = (Emprestimo) resposta.get(true);
+        assertEquals(resposta.containsKey(false), true);
+        assertEquals(((String) resposta.get(false))
+                .contains("data com formato inválido"), true);
+    }
 
-        daoEmprestimo.insert(emprestimo);
-        Item item = new Item(emprestimo, quadrinho, "F");
+    @Test
+    public void efetuandoDevolucao() {
+        preCondicoesEmprestimo();
+        HashMap<Quadrinho, String> quadrinhosEmprestimo = new HashMap<Quadrinho, String>();
+        quadrinhosEmprestimo.put(quadrinhoPadrao, "F"); //(F) versão física do quadrinho
 
-        daoEmprestimo.insert(emprestimo2);
-        Item item2 = new Item(emprestimo2, quadrinho, "D");
+        HashMap<Boolean, Object> resposta
+                = emprestimoControl.efetuarEmprestimo(quadrinhosEmprestimo, amigoPadrao, dataDevolucaoPadraoS);
 
-        System.out.println("ITEM: " + item.getId());
-        System.out.println("ITEM 2: " + item2.getId());
+        emprestimoPadrao = (Emprestimo) resposta.get(true);
 
-        daoItem.insert(item);
-        daoItem.insert(item2);
-//        
-//        ArrayList<Emprestimo> lista = daoEmprestimo.query("SELECT * FROM item I INNER JOIN emprestimo E "
-//                + "ON E.id = I.id_emprestimo;");
-//        
-//        for (Emprestimo e : lista) {
-//            System.out.println("E: " + e.getValues());
-//        }
-//        
-//        ArrayList<Quadrinho> quadrinhos = daoQuadrinho.query("SELECT DISTINCT Q.id, Q.id_colecao, Q.nome, Q.valor, "
-//                + "Q.editora, Q.isbn, Q.versao_fisica, Q.versao_digital, Q.edicao, Q.genero, "
-//                + "Q.disponibilidadeF, Q.disponibilidadeD, Q.curiosidade, Q.nota, Q.recomendavel "
-//                + "FROM quadrinho Q INNER JOIN item I "
-//                + "ON Q.id = I.id_quadrinho INNER JOIN emprestimo ON I.id_emprestimo = "
-//                + emprestimo.getId() + ";");
-//        
-//        for (Quadrinho q : quadrinhos) {
-//            System.out.println("Q: " + q.getId());
-//        }
-//        
-//        ArrayList<Item> itemVersao = daoItem.query("SELECT DISTINCT I.id, I.id_emprestimo, I.id_quadrinho, "
-//                + "I.versao FROM item I INNER JOIN emprestimo "
-//                + "ON I.id_emprestimo = " + emprestimo.getId() + ";");
-//        
-//        for (Item i : itemVersao) {
-//            System.out.println("I: " + i.getVersao());
-//        }
-//        emprestimo.setEstado("FECHADO");
-//        daoEmprestimo.update(emprestimo);
+        HashMap<Boolean, Object> respostaDevolucao = emprestimoControl.efetuarDevolucao(emprestimoPadrao);
+        assertEquals(respostaDevolucao.containsKey(true), true);
+        assertEquals(((String) respostaDevolucao.get(true)).contains("Devolução efetuada com sucesso"), true);
+    }
+
+    @Test
+    public void emprestimoComDataInvalida() {
+        preCondicoesEmprestimo();
+        HashMap<Quadrinho, String> quadrinhosEmprestimo = new HashMap<Quadrinho, String>();
+        quadrinhosEmprestimo.put(quadrinhoPadrao, "F");
+
+        String dataDevolucaoInvalida = "01/01/2019"; // inferior a data do emprestimo
+
+        HashMap<Boolean, Object> resposta
+                = emprestimoControl.efetuarEmprestimo(quadrinhosEmprestimo, amigoPadrao, dataDevolucaoInvalida);
+
+        emprestimoPadrao = (Emprestimo) resposta.get(true);
+        assertEquals(resposta.containsKey(false), true);
+        assertEquals(((String) resposta.get(false))
+                .contains("A data de devolução deve ser maior do que a data atual"), true);
+    }
+
+    @Test
+    public void listarEmprestimos() {
+        preCondicoesEmprestimo();
+        HashMap<Quadrinho, String> quadrinhosEmprestimo = new HashMap<Quadrinho, String>();
+        quadrinhosEmprestimo.put(quadrinhoPadrao, "F"); //(F) versão física do quadrinho
+
+        HashMap<Boolean, Object> resposta
+                = emprestimoControl.efetuarEmprestimo(quadrinhosEmprestimo, amigoPadrao, dataDevolucaoPadraoS);
+
+        emprestimoPadrao = (Emprestimo) resposta.get(true);
+
+        ArrayList<Emprestimo> lista = emprestimoControl.listarTodosOsEmprestimos();
+        assertEquals(lista.size() == 1, true);
+    }
+
+    @Test
+    public void listaVazia() {
+        ArrayList<Emprestimo> lista = emprestimoControl.listarTodosOsEmprestimos();
+        assertEquals(lista.isEmpty(), true);
+    }
+
+    public void preCondicoesEmprestimo() {
+        salvarAmigoPadrao();
+        salvarQuadrinhoPadrao();
+    }
+
+    public void salvarQuadrinhoPadrao() {
+        String nomePadrao = "Watchmen";
+        Double valorPadrao = 16.90;
+        String editoraPadrao = "DC Comics";
+        String isbnPadrao = "0189554710253";
+        String edicaoPadrao = "edição especial";
+        String generoPadrao = "ficção cientíica";
+        String curiosidade = "Serviu de inspiração para o filme";
+        double nota = 10;
+
+        HashMap<Boolean, Object> resposta1 = quadrinhoControl
+                .salvarQuadrinho(nomePadrao, valorPadrao, editoraPadrao, isbnPadrao, "s", "s", edicaoPadrao,
+                        generoPadrao, curiosidade, nota, "s");
+
+        quadrinhoPadrao = (Quadrinho) resposta1.get(true);
+    }
+
+    public void salvarAmigoPadrao() {
+        String nome = "joao da silva";
+        String dataNasc = "10/10/1990";
+        String cpf = "777.666.555-00";
+        Endereco endereco = null;
+        String email = "joaosilva@hotmail.com";
+        String fone = "083 99971-2585";
+
+        HashMap<Boolean, Object> resposta = amigoControl.salvarAmigo(endereco, nome, dataNasc, cpf, fone, email);
+        amigoPadrao = (Amigo) resposta.get(true);
     }
 }
